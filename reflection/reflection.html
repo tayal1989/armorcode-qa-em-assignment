@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive QA Leadership Reflection | ArmorCode Assignment</title>
+  
+  <!-- Premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Variables & Theme Configuration */
+    :root[data-theme="dark"] {
+      --bg-radial: radial-gradient(circle at 0% 0%, #0c0e17 0%, #05060b 100%);
+      --card-bg: rgba(18, 22, 38, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-glow: rgba(99, 102, 241, 0.2);
+      
+      --success: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.15);
+      
+      --warning: #f59e0b;
+      --warning-glow: rgba(245, 158, 11, 0.15);
+      
+      --danger: #ef4444;
+      --danger-glow: rgba(239, 68, 68, 0.2);
+      
+      --info: #06b6d4;
+      --info-glow: rgba(6, 182, 212, 0.15);
+      
+      --highlight: rgba(255, 255, 255, 0.03);
+      --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+      --badge-bg: rgba(255, 255, 255, 0.05);
+    }
+    
+    :root[data-theme="light"] {
+      --bg-radial: radial-gradient(circle at 0% 0%, #f8fafc 0%, #e2e8f0 100%);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(99, 102, 241, 0.12);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      
+      --primary: #4f46e5;
+      --primary-hover: #3730a3;
+      --primary-glow: rgba(79, 70, 229, 0.1);
+      
+      --success: #059669;
+      --success-glow: rgba(5, 150, 105, 0.08);
+      
+      --warning: #d97706;
+      --warning-glow: rgba(217, 119, 6, 0.08);
+      
+      --danger: #dc2626;
+      --danger-glow: rgba(220, 38, 38, 0.1);
+      
+      --info: #0891b2;
+      --info-glow: rgba(8, 145, 178, 0.08);
+      
+      --highlight: rgba(0, 0, 0, 0.02);
+      --shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.08);
+      --badge-bg: rgba(79, 70, 229, 0.05);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-radial);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding-bottom: 5rem;
+    }
+    
+    /* Layout Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+    
+    /* Header Section */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 3rem;
+    }
+    
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .brand-logo {
+      background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+    
+    .brand-meta h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, var(--text-main), var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .brand-meta p {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-dim);
+      font-weight: 600;
+      margin-top: 0.2rem;
+    }
+    
+    /* Theme Toggle Switch */
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow);
+    }
+    
+    .theme-toggle:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    /* Executive Summary Callout Box */
+    .exec-summary-box {
+      background: linear-gradient(135deg, var(--card-bg) 0%, var(--highlight) 100%);
+      border: 1px solid var(--card-border);
+      border-left: 5px solid var(--primary);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3.5rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    
+    .exec-summary-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .exec-summary-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1;
+      position: relative;
+    }
+    
+    .exec-summary-text {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      max-width: 95%;
+      z-index: 1;
+      position: relative;
+    }
+    
+    /* Section Headings */
+    .section-heading {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    
+    .section-heading h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 0.5rem;
+    }
+    
+    .section-heading h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+    
+    .section-heading p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+    
+    /* GRID: Risks Escalation (Section 1) */
+    .risks-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    
+    .risk-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 1.5rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    
+    .risk-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .risk-icon-wrapper {
+      width: 70px;
+      height: 70px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Specific risk colors */
+    .risk-card.risk-critical .risk-icon-wrapper {
+      background: var(--danger-glow);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    .risk-card.risk-critical .risk-icon-wrapper svg {
+      stroke: var(--danger);
+    }
+    
+    .risk-card.risk-security .risk-icon-wrapper {
+      background: var(--warning-glow);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .risk-card.risk-security .risk-icon-wrapper svg {
+      stroke: var(--warning);
+    }
+    
+    .risk-card.risk-state .risk-icon-wrapper {
+      background: var(--info-glow);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+    .risk-card.risk-state .risk-icon-wrapper svg {
+      stroke: var(--info);
+    }
+    
+    .risk-content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    
+    .risk-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    
+    .risk-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .badge-critical {
+      background: var(--danger-glow);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .badge-security {
+      background: var(--warning-glow);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+    .badge-state {
+      background: var(--info-glow);
+      color: var(--info);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+    }
+    
+    .risk-details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+    
+    .detail-column {
+      background: var(--highlight);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    
+    .detail-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    
+    .detail-title.txt-problem { color: var(--danger); }
+    .detail-title.txt-impact { color: var(--text-muted); }
+    .detail-title.txt-mitigation { color: var(--success); }
+    
+    .detail-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    
+    /* Schematic visualization in card */
+    .schematic-box {
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      background: rgba(0,0,0,0.15);
+      border-radius: 8px;
+      border: 1px dashed var(--card-border);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      overflow-x: auto;
+      white-space: pre;
+    }
+    
+    /* SECTION 2: Domain Pod Ownership Model */
+    .pod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+    
+    .pod-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+    }
+    
+    .pod-card.active-pod {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+    
+    .pod-card-header {
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .pod-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    
+    .pod-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    
+    .pod-services {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .service-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--highlight);
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      border: 1px solid transparent;
+    }
+    
+    .service-item:hover {
+      border-color: var(--card-border);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .service-name {
+      font-weight: 600;
+      font-family: 'Fira Code', monospace;
+    }
+    
+    .service-lang {
+      font-size: 0.7rem;
+      background: var(--badge-bg);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    
+    .pod-focus {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px dashed var(--card-border);
+      padding-top: 1rem;
+    }
+    
+    /* QA Engineer Role definition panel */
+    .role-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 4rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    
+    .role-pill {
+      background: var(--highlight);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+    
+    .role-pill-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .role-pill-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    /* SECTION 3: Roadmap (Timeline vs Month 3) */
+    .roadmap-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 3.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .roadmap-container {
+        grid-template-columns: 1fr;
+      }
+      .risk-card {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .roadmap-phase {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+    
+    .phase-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      letter-spacing: 0.05em;
+    }
+    
+    .phase-badge.w1 {
+      background: var(--primary-glow);
+      color: var(--primary);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+    
+    .phase-badge.m3 {
+      background: var(--success-glow);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+    
+    .phase-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    
+    .phase-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2rem;
+    }
+    
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+      position: relative;
+    }
+    
+    .timeline-list::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 7px;
+      width: 2px;
+      height: calc(100% - 16px);
+      background: var(--card-border);
+    }
+    
+    .timeline-item {
+      padding-left: 2rem;
+      position: relative;
+    }
+    
+    .timeline-dot {
+      position: absolute;
+      left: 2px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50px;
+      border: 2px solid var(--card-bg);
+    }
+    
+    .roadmap-phase.phase-w1 .timeline-dot {
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--primary-glow);
+    }
+    
+    .roadmap-phase.phase-m3 .timeline-dot {
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success-glow);
+    }
+    
+    .timeline-item-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .timeline-item-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding-top: 3rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+    
+    footer strong {
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Top Header -->
+    <header>
+      <div class="brand">
+        <div class="brand-logo">AC</div>
+        <div class="brand-meta">
+          <h1>Quality Engineering Leadership Reflection</h1>
+          <p>Executive Report • microservices governance & roadmaps</p>
+        </div>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun" id="themeIcon">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span id="themeText">Light Mode</span>
+      </button>
+    </header>
+
+    <!-- Executive Summary Section -->
+    <section class="exec-summary-box">
+      <div class="exec-summary-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-activity"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        Executive Abstract
+      </div>
+      <p class="exec-summary-text">
+        This leadership reflection details critical quality risks discovered in the OpenTelemetry Astronomy Shop architecture, structures a highly leveraged <strong>Domain-Pod Ownership Model</strong> for a team of 4 QA engineers managing 20+ polyglot services, and details a progressive automation roadmap that leverages lightweight CI gates in Week 1 before scaling contract checks and advisory agentic triage by Month 3.
+      </p>
+    </section>
+
+    <!-- Section 1: Critical Risks Escalation -->
+    <section>
+      <div class="section-heading">
+        <h2>Quality Risks Escalation</h2>
+        <p>Systemic architectural and security vulnerabilities requiring immediate engineering leadership intervention.</p>
+      </div>
+      
+      <div class="risks-container">
+        
+        <!-- Risk 1 -->
+        <div class="risk-card risk-critical">
+          <div class="risk-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+              <line x1="12" y1="9" x2="12" y2="13"></line>
+              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+          </div>
+          <div>
+            <div class="risk-content-header">
+              <h3 class="risk-title">Silent Cascading Failures across gRPC Boundaries during Checkout</h3>
+              <span class="risk-badge badge-critical">Critical Revenue Impact</span>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+              The synchronous orchestrator structure inside <code>checkoutservice</code> lacks resilience protections at service boundaries, exposing the application to connection pool saturation and hanging user sessions.
+            </p>
+            
+            <div class="schematic-box">[checkoutservice] (Go) --(gRPC Sync Chain)--> [paymentservice] (Node.js) & [shippingservice] (Go)
+* Status: No client-side timeouts, retries, or circuit breakers.
+* Hazard: Downstream bottlenecks lock goroutines, causing connection pool exhaustion and checkout abandonment.</div>
+
+            <div class="risk-details-grid">
+              <div class="detail-column">
+                <div class="detail-title txt-problem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                  Why Escalate
+                </div>
+                <p class="detail-desc">Directly threatens business conversion metrics. High latencies or outages in downstream billing or quote generation translate into silently dropped orders and frozen storefront threads.</p>
+              </div>
+              <div class="detail-column">
+                <div class="detail-title txt-impact">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  Operational Blast Radius
+                </div>
+                <p class="detail-desc">Go routing context lacks configured deadlines. Downstream network latency forces threads to wait indefinitely, depleting system connection limits and collapsing storefront proxy gateways under load.</p>
+              </div>
+              <div class="detail-column">
+                <div class="detail-title txt-mitigation">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  Recommended Mitigation
+                </div>
+                <p class="detail-desc">Inject strict gRPC deadlines (timeouts) in Go connection contexts. Set up client-side circuit breakers via Istio/Envoy, and implement dynamic fallback interfaces (e.g. queue email operations instead of blocking checkout).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk 2 -->
+        <div class="risk-card risk-security">
+          <div class="risk-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="risk-content-header">
+              <h3 class="risk-title">PCI-DSS / PII Security Exposure in Telemetry Spans</h3>
+              <span class="risk-badge badge-security">Security & Compliance Exposure</span>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+              The telemetry logging framework in <code>checkoutservice</code> captures raw credit card numbers and CVV codes, storing them in plaintext within tracing tags.
+            </p>
+            
+            <div class="schematic-box">[checkoutservice] --(Adds Raw CC / CVV as Span Attributes)--> [otel-collector] --> observability dashboard (Jaeger UI)
+* Status: Plaintext credit cards exported directly.
+* Hazard: Severe violation of PCI-DSS Requirement 3; logs/traces expose financial credentials to unauthorized internal dashboards.</div>
+
+            <div class="risk-details-grid">
+              <div class="detail-column">
+                <div class="detail-title txt-problem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                  Why Escalate
+                </div>
+                <p class="detail-desc">Presents extreme regulatory and legal compliance risks. Leakage of raw credit card numbers and security pins into open log lakes breaks basic financial processor compliance frameworks.</p>
+              </div>
+              <div class="detail-column">
+                <div class="detail-title txt-impact">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  Operational Blast Radius
+                </div>
+                <p class="detail-desc">Observability backends are rarely locked down to bank-level access controls. Exposed cardholder credentials threaten card processing licensing and invite significant network compliance penalties.</p>
+              </div>
+              <div class="detail-column">
+                <div class="detail-title txt-mitigation">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  Recommended Mitigation
+                </div>
+                <p class="detail-desc">Refactor checkout instrumentation code to scrub raw telemetry properties. Deploy redacting regex filters in the <code>otel-collector</code> telemetry pipeline to block downstream exports of sensitive keys.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk 3 -->
+        <div class="risk-card risk-state">
+          <div class="risk-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-database">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+              <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"></path>
+            </svg>
+          </div>
+          <div>
+            <div class="risk-content-header">
+              <h3 class="risk-title">Ephemeral State Data Loss in Cart Operations</h3>
+              <span class="risk-badge badge-state">State Loss Risk</span>
+            </div>
+            
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+              The cart storage layers utilize a stateless Valkey in-memory configuration without durable database synchronization or write-through fallbacks.
+            </p>
+            
+            <div class="schematic-box">[cartservice] (C#) --(Transient Reads/Writes Only)--> [valkey-cart] (In-Memory Cache)
+* Status: Zero persistence layer backing.
+* Hazard: Valkey restarts or memory evictions silently delete customer cart contents, destroying active user sessions.</div>
+
+            <div class="risk-details-grid">
+              <div class="detail-column">
+                <div class="detail-title txt-problem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                  Why Escalate
+                </div>
+                <p class="detail-desc">In-memory eviction during high-traffic campaigns directly erases customer shopping sessions. A user who loses their active cart is highly unlikely to re-browse, causing instant conversion drops.</p>
+              </div>
+              <div class="detail-column">
+                <div class="detail-title txt-impact">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                  Operational Blast Radius
+                </div>
+                <p class="detail-desc">If Valkey hits physical memory limits or the container is rescheduled by Kubernetes, all volatile states vanish instantly. Under load, <code>allkeys-lru</code> eviction policy strips cart items indiscriminately.</p>
+              </div>
+              <div class="detail-column">
+                <div class="detail-title txt-mitigation">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                  Recommended Mitigation
+                </div>
+                <p class="detail-desc">Implement a write-through pattern within <code>cartservice</code>. Cache state transitions in Valkey for latency control, but mirror them asynchronously to a persistent database (e.g. Postgres or DynamoDB).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section 2: Domain-Pod Ownership Model -->
+    <section>
+      <div class="section-heading">
+        <h2>Scale-Out Domain Ownership Model</h2>
+        <p>Restructuring 4 QA engineers into decentralized Domain Pod Leads to manage 20+ polyglot services without bottlenecking.</p>
+      </div>
+      
+      <div class="pod-grid">
+        
+        <!-- Pod 1 -->
+        <div class="pod-card" onclick="highlightPod(this)">
+          <div class="pod-card-header">
+            <div class="pod-label">Domain Pod 1</div>
+            <div class="pod-name">Core Storefront & Cart</div>
+          </div>
+          <div class="pod-services">
+            <div class="service-item">
+              <span class="service-name">frontend</span>
+              <span class="service-lang">Next.js</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">frontend-proxy</span>
+              <span class="service-lang">Envoy</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">cartservice</span>
+              <span class="service-lang">C#</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">productcatalog</span>
+              <span class="service-lang">Go</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">currencyservice</span>
+              <span class="service-lang">C++</span>
+            </div>
+          </div>
+          <div class="pod-focus">
+            <strong>QE Scope:</strong> User-facing latency, storefront UI validation, translation rounding edge-cases, and shopping cart cache durability.
+          </div>
+        </div>
+
+        <!-- Pod 2 -->
+        <div class="pod-card" onclick="highlightPod(this)">
+          <div class="pod-card-header">
+            <div class="pod-label">Domain Pod 2</div>
+            <div class="pod-name">Order & Fulfillment</div>
+          </div>
+          <div class="pod-services">
+            <div class="service-item">
+              <span class="service-name">checkoutservice</span>
+              <span class="service-lang">Go</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">paymentservice</span>
+              <span class="service-lang">Node.js</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">shippingservice</span>
+              <span class="service-lang">Go</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">emailservice</span>
+              <span class="service-lang">Ruby</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">accountingservice</span>
+              <span class="service-lang">Go</span>
+            </div>
+          </div>
+          <div class="pod-focus">
+            <strong>QE Scope:</strong> gRPC interface contracts, transactional consistency, payment stubs, ledger logs, tax structures, and async email queues.
+          </div>
+        </div>
+
+        <!-- Pod 3 -->
+        <div class="pod-card" onclick="highlightPod(this)">
+          <div class="pod-card-header">
+            <div class="pod-label">Domain Pod 3</div>
+            <div class="pod-name">Recom. & Personalization</div>
+          </div>
+          <div class="pod-services">
+            <div class="service-item">
+              <span class="service-name">recommendationserv</span>
+              <span class="service-lang">Python</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">adservice</span>
+              <span class="service-lang">Java</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">quoteservice</span>
+              <span class="service-lang">PHP</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">flagd (Feature Flag)</span>
+              <span class="service-lang">Go</span>
+            </div>
+          </div>
+          <div class="pod-focus">
+            <strong>QE Scope:</strong> ML recommendation latency validation, ad targeting accuracy, PHP fallbacks, and feature-flag permutation matrix coverage.
+          </div>
+        </div>
+
+        <!-- Pod 4 -->
+        <div class="pod-card" onclick="highlightPod(this)">
+          <div class="pod-card-header">
+            <div class="pod-label">Domain Pod 4</div>
+            <div class="pod-name">Platform & Infrastructure</div>
+          </div>
+          <div class="pod-services">
+            <div class="service-item">
+              <span class="service-name">otel-collector</span>
+              <span class="service-lang">Go Config</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">image-provider</span>
+              <span class="service-lang">Go</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">valkey-cart</span>
+              <span class="service-lang">Cache</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">kafka (Event Bus)</span>
+              <span class="service-lang">Java</span>
+            </div>
+            <div class="service-item">
+              <span class="service-name">load-generator</span>
+              <span class="service-lang">Python</span>
+            </div>
+          </div>
+          <div class="pod-focus">
+            <strong>QE Scope:</strong> Performance/stress harnesses (k6), telemetry schema validation, broker consumer-lag checks, and CI pipeline speeds.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- QA Role Panel -->
+      <div class="role-panel">
+        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.3rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></circle><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Redefining the QA Engineer Role (Quality Tech Lead)
+        </h3>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">
+          With 4 engineers managing over 20 polyglot services, the traditional role of downstream manual verification must be deprecated. Each QA acts as the <strong>Quality Tech Lead</strong> for their assigned pod, focusing on high-leverage activities:
+        </p>
+        
+        <div class="role-grid">
+          <div class="role-pill">
+            <div class="role-pill-title">Shift-Left RFC Reviews</div>
+            <div class="role-pill-desc">Embeds directly in service architectural design phases. Identifies interface gaps, schema compliance risks, and consistency bottlenecks prior to coding.</div>
+          </div>
+          <div class="role-pill">
+            <div class="role-pill-title">Infra & Boilerplate Ownership</div>
+            <div class="role-pill-desc">Creates, packages, and maintains modular testing libraries, mock stubs, and CI configurations to streamline developer integration testing.</div>
+          </div>
+          <div class="role-pill">
+            <div class="role-pill-title">Contract & Schema Governance</div>
+            <div class="role-pill-desc">Configures and oversees automated contract definitions (e.g. Pact, OpenAPI drift gates) to ensure service interfaces remain backward compatible.</div>
+          </div>
+          <div class="role-pill">
+            <div class="role-pill-title">Agentic Pipeline Supervision</div>
+            <div class="role-pill-desc">Instructs and validates LLM-based autonomous test-generation tools, defining testing directives while auditing generated assertions.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Engineering Roadmap -->
+    <section>
+      <div class="section-heading">
+        <h2>Engineering Roadmap</h2>
+        <p>From establishing foundational testing quality signals to rolling out fully automated, agentic CI pipelines.</p>
+      </div>
+      
+      <div class="roadmap-container">
+        
+        <!-- Week 1 -->
+        <div class="roadmap-phase phase-w1">
+          <span class="phase-badge w1">Phase 1</span>
+          <h3 class="phase-title">Week 1</h3>
+          <p class="phase-subtitle">Immediate Alignment & Signal Quality</p>
+          
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <h4 class="timeline-item-title">Audit Top 2-3 Core Revenue Flows</h4>
+              <p class="timeline-item-desc">Map critical path transaction flows (Catalog to Cart to Checkout), documenting gRPC dependencies and database write boundaries to locate integration bottlenecks.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <h4 class="timeline-item-title">Deploy Lightweight CI Smoke Gates</h4>
+              <p class="timeline-item-desc">Configure a rapid PR build gate (< 5 min feedback loop) that executes happy-path checkout validations using local mock stubs to immediately block broken PR code.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <h4 class="timeline-item-title">Standardize Test Reporting Structure</h4>
+              <p class="timeline-item-desc">Establish a unified Playwright framework config and consolidated HTML test results templates across all 4 QA leads, eliminating framework tool fragmentation.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Month 3 -->
+        <div class="roadmap-phase phase-m3">
+          <span class="phase-badge m3">Phase 2</span>
+          <h3 class="phase-title">Month 3</h3>
+          <p class="phase-subtitle">Sustainable Scaffolding & Assisting Agents</p>
+          
+          <div class="timeline-list">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <h4 class="timeline-item-title">Contract & Schema Validation Gates</h4>
+              <p class="timeline-item-desc">Enforce automated OpenAPI/gRPC schema drift tests (via Buf breaking check) specifically on Checkout, Payment, and Shipping routes to reject invalid API payloads in CI.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <h4 class="timeline-item-title">Advisory Agentic CI Triage</h4>
+              <p class="timeline-item-desc">Roll out an LLM-assisted failure classifier that parses CI error logs (e.g., flakiness vs. product defect vs. env issue) and prints diagnostic details to PR comments.</p>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <h4 class="timeline-item-title">Agent-Assisted Scaffolding CLI</h4>
+              <p class="timeline-item-desc">Standardize developer CLI tooling utilizing agentic LLMs to generate API mock configurations. Targets ~80% automation coverage, with mandatory human code reviews.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>ArmorCode Quality Engineering Assignment • Developed by <strong>Antigravity AI</strong></p>
+    </footer>
+
+  </div>
+
+  <script>
+    // Simple Interactive Features
+    function toggleTheme() {
+      const htmlEl = document.documentElement;
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      htmlEl.setAttribute('data-theme', newTheme);
+      
+      const themeBtnText = document.getElementById('themeText');
+      const themeIcon = document.getElementById('themeIcon');
+      
+      if (newTheme === 'light') {
+        themeBtnText.textContent = 'Dark Mode';
+        themeIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        `;
+      } else {
+        themeBtnText.textContent = 'Light Mode';
+        themeIcon.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        `;
+      }
+    }
+    
+    // Highlight a pod card when clicked
+    function highlightPod(selectedCard) {
+      const cards = document.querySelectorAll('.pod-card');
+      cards.forEach(card => {
+        card.classList.remove('active-pod');
+      });
+      selectedCard.classList.add('active-pod');
+    }
+  </script>
+</body>
+</html>
