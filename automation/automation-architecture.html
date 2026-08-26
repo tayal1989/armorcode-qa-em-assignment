@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automation Architecture & Dashboard | QE Manager Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #030712;
+      --panel-bg: rgba(17, 24, 39, 0.75);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.2);
+      
+      --color-primary: #6366f1;
+      --color-primary-light: #818cf8;
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-danger: #ef4444;
+      --color-cyan: #06b6d4;
+      
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --card-hover-bg: rgba(255, 255, 255, 0.02);
+      
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    body.light-theme {
+      --bg-color: #f8fafc;
+      --panel-bg: rgba(255, 255, 255, 0.85);
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.15);
+      
+      --color-primary: #4f46e5;
+      --color-primary-light: #6366f1;
+      --color-success: #059669;
+      --color-warning: #d97706;
+      --color-danger: #dc2626;
+      --color-cyan: #0891b2;
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --card-hover-bg: rgba(0, 0, 0, 0.01);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0, transparent 40%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0, transparent 40%);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      background: rgba(3, 7, 18, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    body.light-theme header {
+      background: rgba(248, 250, 252, 0.85);
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-cyan));
+      color: #ffffff;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+
+    .header-titles h1 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-titles p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 0.15rem;
+    }
+
+    .theme-toggle-btn {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-sans);
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--color-primary);
+    }
+
+    /* Main Container Layout */
+    .portal-layout {
+      display: flex;
+      flex: 1;
+      max-width: 1600px;
+      width: 100%;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 280px;
+      border-right: 1px solid var(--border-color);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: sticky;
+      top: 75px;
+      height: calc(100vh - 75px);
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      padding: 0.85rem 1.25rem;
+      text-align: left;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .nav-item:hover {
+      background-color: var(--card-hover-bg);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Content Area */
+    .content-area {
+      flex: 1;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+
+    .section-panel {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .section-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography & Titles */
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .panel-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 800px;
+      line-height: 1.5;
+    }
+
+    /* Cards & Grids */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: var(--color-primary);
+    }
+
+    .card.success::before { background-color: var(--color-success); }
+    .card.warning::before { background-color: var(--color-warning); }
+    .card.info::before { background-color: var(--color-cyan); }
+    .card.danger::before { background-color: var(--color-danger); }
+
+    .card-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .card-value {
+      font-family: var(--font-display);
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Info Grids */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .info-card {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .info-card-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    /* Lists */
+    ul.check-list {
+      list-style: none;
+    }
+
+    ul.check-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    ul.check-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--color-success);
+      font-weight: 700;
+    }
+
+    ul.bullet-list {
+      list-style: none;
+    }
+
+    ul.bullet-list li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    ul.bullet-list li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--color-primary);
+      font-size: 1.2rem;
+      top: -0.1rem;
+    }
+
+    /* Badges & Pills */
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge.primary { background-color: rgba(99, 102, 241, 0.15); color: var(--color-primary-light); }
+    .badge.success { background-color: rgba(16, 185, 129, 0.15); color: var(--color-success); }
+    .badge.warning { background-color: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
+    .badge.cyan { background-color: rgba(6, 182, 212, 0.15); color: var(--color-cyan); }
+    .badge.danger { background-color: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
+
+    /* Visual Diagram Container */
+    .diagram-panel {
+      background-color: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .diagram-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      width: 100%;
+      text-align: left;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .portal-layout {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        top: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem;
+        flex-direction: row;
+        overflow-x: auto;
+      }
+      .nav-item {
+        white-space: nowrap;
+      }
+      .content-area {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="logo-section">
+      <div class="logo-badge">AC</div>
+      <div class="header-titles">
+        <h1>ArmorCode Quality Engineering</h1>
+        <p>Automation Architecture & Visual Dashboard</p>
+      </div>
+    </div>
+    <button class="theme-toggle-btn" id="themeToggle">
+      <span id="themeIcon">☀️</span>
+      <span id="themeText">Light Theme</span>
+    </button>
+  </header>
+
+  <!-- Portal Container Layout -->
+  <div class="portal-layout">
+    
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+      <button class="nav-item active" onclick="switchTab(event, 'overview')">
+        <span>📖</span> Executive Overview
+      </button>
+      <button class="nav-item" onclick="switchTab(event, 'pyramid')">
+        <span>🔺</span> Test Architecture
+      </button>
+      <button class="nav-item" onclick="switchTab(event, 'pipeline')">
+        <span>🔁</span> CI/CD Gates & Lifecycle
+      </button>
+      <button class="nav-item" onclick="switchTab(event, 'coverage')">
+        <span>📊</span> Coverage Breakdown
+      </button>
+      <button class="nav-item" onclick="switchTab(event, 'flakiness')">
+        <span>⚙️</span> Data & Flakiness SLA
+      </button>
+    </div>
+
+    <!-- Main Content Panel -->
+    <div class="content-area">
+
+      <!-- PANEL 1: Overview -->
+      <div id="overview" class="section-panel active">
+        <h2 class="panel-title">Executive Overview & Tech Stack</h2>
+        <p class="panel-subtitle">
+          High-level operational metrics and system integrations driving quality validation for the OpenTelemetry Astronomy Shop.
+        </p>
+
+        <!-- Metric Cards Grid -->
+        <div class="metrics-row">
+          <div class="card info">
+            <div class="card-label">Execution Scope</div>
+            <div class="card-value">24</div>
+            <div class="card-desc">Active browser/port runs</div>
+          </div>
+          <div class="card success">
+            <div class="card-label">Test Automation Coverage</div>
+            <div class="card-value">~85%</div>
+            <div class="card-desc">Of identified business scope</div>
+          </div>
+          <div class="card warning">
+            <div class="card-label">PR Gate Lead Time</div>
+            <div class="card-value">&lt; 10m</div>
+            <div class="card-desc">SLA verification threshold</div>
+          </div>
+          <div class="card danger">
+            <div class="card-label">Flaky Test Index</div>
+            <div class="card-value">&lt; 1%</div>
+            <div class="card-desc">Strict quarantine SLA</div>
+          </div>
+        </div>
+
+        <!-- Tech Stack Grids -->
+        <div class="info-grid">
+          <div class="info-card">
+            <h3 class="info-card-title"><span style="color: var(--color-primary);">🛠️</span> Playwright Unified Runner</h3>
+            <p>
+              We consolidate API contract checks and end-to-end storefront transactions under a unified **TypeScript + Playwright** runtime, eliminating framework context-switching overhead.
+            </p>
+            <ul class="bullet-list">
+              <li>**Single Runner Context**: Shared HTTP headers, cookies, and tokens between API/UI threads.</li>
+              <li>**Browser Project Matrix**: Native parallel execution on Chromium, Firefox, and WebKit.</li>
+              <li>**Embedded Trace Triggers**: Captures network logs, DOM snapshots, and console outputs.</li>
+            </ul>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card-title"><span style="color: var(--color-cyan);">⚡</span> Target Application Topology</h3>
+            <p>
+              The target application runs at `http://localhost:8080`, hosting a polyglot microservice graph (Go, Node.js, C#, C++, Ruby, PHP) integrated with a Valkey-cart cache backend.
+            </p>
+            <ul class="bullet-list">
+              <li>**Next.js BFF Gateway**: Routes page requests and handles REST endpoints.</li>
+              <li>**Valkey Cart Storage**: Stores active cart session lists.</li>
+              <li>**gRPC Internal Grid**: Synchronous mesh connecting core services.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: Pyramid -->
+      <div id="pyramid" class="section-panel">
+        <h2 class="panel-title">Layered Test Architecture (The Test Pyramid)</h2>
+        <p class="panel-subtitle">
+          Our test pyramid allocates resources to minimize feedback loops and maximize coverage stability, matching the microservice structure.
+        </p>
+
+        <!-- Inline SVG Pyramid -->
+        <div class="diagram-panel">
+          <div class="diagram-title">Quality Assurance Test Pyramid Breakdown</div>
+          <svg viewBox="0 0 800 450" width="100%" height="380" style="background: transparent;">
+            <defs>
+              <linearGradient id="pyr-g5" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#a78bfa" />
+                <stop offset="100%" stop-color="#6366f1" />
+              </linearGradient>
+              <linearGradient id="pyr-g4" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#38bdf8" />
+                <stop offset="100%" stop-color="#0284c7" />
+              </linearGradient>
+              <linearGradient id="pyr-g3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4ade80" />
+                <stop offset="100%" stop-color="#16a34a" />
+              </linearGradient>
+              <linearGradient id="pyr-g2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fb7185" />
+                <stop offset="100%" stop-color="#e11d48" />
+              </linearGradient>
+              <linearGradient id="pyr-g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fcd34d" />
+                <stop offset="100%" stop-color="#d97706" />
+              </linearGradient>
+            </defs>
+
+            <!-- Pyramid Layers (Coordinates calculated to stack beautifully) -->
+            <!-- Layer 5 (E2E / System) -->
+            <polygon points="400,30 330,110 470,110" fill="url(#pyr-g1)" opacity="0.9" />
+            <text x="400" y="90" fill="#ffffff" font-family="Space Grotesk" font-size="12" font-weight="700" text-anchor="middle">E2E / UI (5%)</text>
+
+            <!-- Layer 4 (Performance & Stress) -->
+            <polygon points="330,113 270,185 530,185 470,113" fill="url(#pyr-g2)" opacity="0.9" />
+            <text x="400" y="155" fill="#ffffff" font-family="Space Grotesk" font-size="13" font-weight="700" text-anchor="middle">Performance / k6 (10%)</text>
+
+            <!-- Layer 3 (Integration & Database) -->
+            <polygon points="270,188 200,265 600,265 530,188" fill="url(#pyr-g3)" opacity="0.9" />
+            <text x="400" y="235" fill="#ffffff" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">Integration / Valkey Cache (20%)</text>
+
+            <!-- Layer 2 (Contract & API Schema) -->
+            <polygon points="200,268 120,350 680,350 600,268" fill="url(#pyr-g4)" opacity="0.9" />
+            <text x="400" y="315" fill="#ffffff" font-family="Space Grotesk" font-size="15" font-weight="700" text-anchor="middle">Contract & API Schema (25%)</text>
+
+            <!-- Layer 1 (Unit & Component) -->
+            <polygon points="120,353 30,440 770,440 680,353" fill="url(#pyr-g5)" opacity="0.9" />
+            <text x="400" y="405" fill="#ffffff" font-family="Space Grotesk" font-size="16" font-weight="700" text-anchor="middle">Unit & Component Code (40%)</text>
+          </svg>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="info-grid">
+          <div class="info-card">
+            <h3 class="info-card-title"><span class="badge primary">5%</span> End-to-End Storefront UI</h3>
+            <p>
+              Simulates critical customer flows in real browsers. Targets end-to-end purchasing transaction integrity, math calculations, and storefront element interactions.
+            </p>
+            <ul class="check-list">
+              <li>E2E Checkout transaction flow</li>
+              <li>Calculations totals & empty states UI</li>
+              <li>Executed via WebKit, Chrome, Firefox</li>
+            </ul>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card-title"><span class="badge success">25%</span> Contract & API Schema</h3>
+            <p>
+              Validates communication contracts at interface boundaries. Leverages **Ajv JSON Schema** checks for BFF API responses and **Buf** for gRPC serialization checks.
+            </p>
+            <ul class="check-list">
+              <li>Validate REST outputs against AJV schemas</li>
+              <li>Buf breaking CLI checks for gRPC compatibility</li>
+              <li>Pact microservice contract mocks</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Pipeline -->
+      <div id="pipeline" class="section-panel">
+        <h2 class="panel-title">Test Execution Lifecycle & CI/CD Gates</h2>
+        <p class="panel-subtitle">
+          To accelerate delivery velocity while preventing regressions, we implement progressive quality gates across the development lifecycle.
+        </p>
+
+        <!-- Inline SVG Flowchart -->
+        <div class="diagram-panel">
+          <div class="diagram-title">Progressive CI/CD Pipeline Gates</div>
+          <svg viewBox="0 0 850 250" width="100%" height="220" style="background: transparent;">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#6366f1" />
+              </marker>
+            </defs>
+
+            <!-- Gate 1: Pre-Commit -->
+            <rect x="10" y="40" width="170" height="150" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="95" y="70" fill="var(--color-primary-light)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">Gate 1: Pre-Commit</text>
+            <text x="95" y="105" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Local dev hook</text>
+            <text x="95" y="125" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Lint & formatting</text>
+            <text x="95" y="145" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Buf lint checks</text>
+            <text x="95" y="170" fill="var(--color-success)" font-family="Space Grotesk" font-size="12" font-weight="600" text-anchor="middle">Fast Loop</text>
+
+            <path d="M 180 115 L 210 115" stroke="var(--color-primary)" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Gate 2: PR Build -->
+            <rect x="220" y="40" width="170" height="150" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="305" y="70" fill="var(--color-cyan)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">Gate 2: PR Build</text>
+            <text x="305" y="105" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Fast smoke check</text>
+            <text x="305" y="125" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Unit tests & Pact</text>
+            <text x="305" y="145" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">BFF endpoint checks</text>
+            <text x="305" y="170" fill="var(--color-warning)" font-family="Space Grotesk" font-size="12" font-weight="600" text-anchor="middle">SLA: &lt; 10 mins</text>
+
+            <path d="M 390 115 L 420 115" stroke="var(--color-primary)" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Gate 3: Pre-Merge -->
+            <rect x="430" y="40" width="170" height="150" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="515" y="70" fill="var(--color-warning)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">Gate 3: Pre-Merge</text>
+            <text x="515" y="105" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Release candidate</text>
+            <text x="515" y="125" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Compose integration</text>
+            <text x="515" y="145" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Playwright UI smoke</text>
+            <text x="515" y="170" fill="var(--color-warning)" font-family="Space Grotesk" font-size="12" font-weight="600" text-anchor="middle">SLA: &lt; 20 mins</text>
+
+            <path d="M 600 115 L 630 115" stroke="var(--color-primary)" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Gate 4: Nightly -->
+            <rect x="640" y="40" width="180" height="150" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="730" y="70" fill="var(--color-success)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">Gate 4: Nightly</text>
+            <text x="730" y="105" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Deep regression</text>
+            <text x="730" y="125" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Cross-browser matrix</text>
+            <text x="730" y="145" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">k6 Scale & Sec scans</text>
+            <text x="730" y="170" fill="var(--color-primary-light)" font-family="Space Grotesk" font-size="12" font-weight="600" text-anchor="middle">Full Suite Execution</text>
+          </svg>
+        </div>
+
+        <!-- Description Grid -->
+        <div class="info-grid">
+          <div class="info-card">
+            <h3 class="info-card-title"><span style="color: var(--color-cyan);">🔁</span> Fast Feedback Loop (Gate 2)</h3>
+            <p>
+              Executed automatically on every PR commit. Mocks heavy dependencies to maintain a **&lt; 10 minute SLA** execution gate. Ensures developers obtain rapid status check signals without pipeline blockages.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card-title"><span style="color: var(--color-success);">🛡️</span> Deep Regression Validation (Gate 4)</h3>
+            <p>
+              Runs out-of-band nightly. Triggers the complete matrix of browser platforms and REST API contract checks. Runs **k6 load test configurations** to capture scalability benchmarks.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: Coverage -->
+      <div id="coverage" class="section-panel">
+        <h2 class="panel-title">Automation Coverage Breakdown</h2>
+        <p class="panel-subtitle">
+          We focus automation efforts where they yield the highest ROI, while intentionally managing risk for visual or chaotic system behaviors.
+        </p>
+
+        <!-- Inline SVG Pie/Donut Chart representation -->
+        <div class="diagram-panel">
+          <div class="diagram-title">Scope Automation Ratio</div>
+          <svg viewBox="0 0 500 220" width="100%" height="200" style="background: transparent;">
+            <circle cx="120" cy="110" r="80" fill="none" stroke="#1f2937" stroke-width="25" />
+            <!-- Donut segment for 85% Automatable (calculated: stroke-dasharray = 2 * PI * r * 0.85 = 427, total circumference = 502) -->
+            <circle cx="120" cy="110" r="80" fill="none" stroke="var(--color-success)" stroke-width="25"
+                    stroke-dasharray="427 75" stroke-dashoffset="125" />
+            
+            <!-- Text center of donut -->
+            <text x="120" y="118" fill="var(--text-primary)" font-family="Space Grotesk" font-size="22" font-weight="700" text-anchor="middle">85%</text>
+            
+            <!-- Legend -->
+            <rect x="250" y="60" width="16" height="16" rx="4" fill="var(--color-success)" />
+            <text x="280" y="73" fill="var(--text-primary)" font-family="Inter" font-size="13" font-weight="600">Automatable Scope (85%)</text>
+            <text x="280" y="93" fill="var(--text-muted)" font-family="Inter" font-size="11">Core storefront E2E, REST contracts, boundaries</text>
+
+            <rect x="250" y="120" width="16" height="16" rx="4" fill="#1f2937" />
+            <text x="280" y="133" fill="var(--text-primary)" font-family="Inter" font-size="13" font-weight="600">Manual Verification (15%)</text>
+            <text x="280" y="153" fill="var(--text-muted)" font-family="Inter" font-size="11">Third-party payment gateways, Jaeger spans</text>
+          </svg>
+        </div>
+
+        <!-- Scope Breakdowns -->
+        <div class="info-grid">
+          <div class="info-card" style="border-top: 4px solid var(--color-success);">
+            <h3 class="info-card-title"><span style="color: var(--color-success);">🟢</span> Automated Core Paths (85%)</h3>
+            <p>
+              Predicable, state-driven user interactions and REST contracts are fully automated:
+            </p>
+            <ul class="bullet-list">
+              <li>**UI E2E Purchasing Flow**: Complete card checkout, address inputs, and confirmation order routing.</li>
+              <li>**BFF API Contract Checking**: JSON payloads validated against strict schemas (Ajv) dynamically.</li>
+              <li>**Boundary Values**: Rejecting integer overflow/underflow quantitive operations.</li>
+            </ul>
+          </div>
+
+          <div class="info-card" style="border-top: 4px solid var(--text-muted);">
+            <h3 class="info-card-title"><span style="color: var(--text-muted);">🔴</span> Deliberate Manual Scope (15%)</h3>
+            <p>
+              High-maintenance or infrastructure verification flows are bypassed to reduce suite fragility:
+            </p>
+            <ul class="bullet-list">
+              <li>**External Gateway Authorization**: Live sandbox credit card processing (bypassed with validation mock stubs).</li>
+              <li>**Jaeger span telemetry UI validation**: Verifying spans render correctly inside Jaeger dashboard pages.</li>
+              <li>**Chaos resilience**: Kafka message drops or container packet losses under network partition failures.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 5: Flakiness -->
+      <div id="flakiness" class="section-panel">
+        <h2 class="panel-title">Test Data & Flakiness Architecture</h2>
+        <p class="panel-subtitle">
+          Ensuring deterministic execution environments by isolating state data and quarantining fragile tests.
+        </p>
+
+        <!-- Inline SVG Data & Flakiness Flowchart -->
+        <div class="diagram-panel">
+          <div class="diagram-title">Data Isolation & Flakiness Workflow</div>
+          <svg viewBox="0 0 800 260" width="100%" height="240" style="background: transparent;">
+            <!-- Step 1: Dynamic Data -->
+            <rect x="10" y="60" width="160" height="120" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="90" y="90" fill="var(--color-primary-light)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">1. Data Isolation</text>
+            <text x="90" y="120" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Dynamic UUID Session</text>
+            <text x="90" y="140" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">No shared state</text>
+            <text x="90" y="160" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Isolated Valkey Cart</text>
+
+            <path d="M 170 120 L 200 120" stroke="var(--color-primary)" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Step 2: Test Run -->
+            <rect x="210" y="60" width="160" height="120" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="290" y="90" fill="var(--color-cyan)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">2. Test Run</text>
+            <text x="290" y="120" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Parallel browser run</text>
+            <text x="290" y="140" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Inspect execution status</text>
+
+            <path d="M 370 120 L 400 120" stroke="var(--color-primary)" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Step 3: Flaky Check -->
+            <rect x="410" y="60" width="170" height="120" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="495" y="90" fill="var(--color-warning)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">3. Flaky Index</text>
+            <text x="495" y="120" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Fail -> Retries pass</text>
+            <text x="495" y="140" fill="var(--color-danger)" font-family="Space Grotesk" font-size="12" font-weight="600" text-anchor="middle">If Rate > 1%</text>
+
+            <path d="M 580 120 L 610 120" stroke="var(--color-primary)" stroke-width="2" marker-end="url(#arrow)" />
+
+            <!-- Step 4: Quarantine -->
+            <rect x="620" y="60" width="170" height="120" rx="12" fill="var(--panel-bg)" stroke="var(--border-color)" stroke-width="2" />
+            <text x="705" y="90" fill="var(--color-danger)" font-family="Space Grotesk" font-size="14" font-weight="700" text-anchor="middle">4. Quarantine</text>
+            <text x="705" y="120" fill="var(--text-secondary)" font-family="Inter" font-size="11" text-anchor="middle">Isolate from builds</text>
+            <text x="705" y="140" fill="var(--text-muted)" font-family="Inter" font-size="11" text-anchor="middle">Alert developer</text>
+            <text x="705" y="160" fill="var(--color-success)" font-family="Space Grotesk" font-size="11" font-weight="600" text-anchor="middle">Fix SLA &lt; 48 hours</text>
+          </svg>
+        </div>
+
+        <!-- Strategy description -->
+        <div class="info-grid">
+          <div class="info-card">
+            <h3 class="info-card-title"><span style="color: var(--color-primary);">📦</span> State Isolation Strategy</h3>
+            <p>
+              Running parallel playwright workers threatens state stability when sharing carts. We mitigate this by generating a unique session string dynamically per test thread:
+            </p>
+            <code style="font-family: var(--font-mono); font-size: 0.8rem; background-color: #0f172a; padding: 0.25rem 0.5rem; border-radius: 4px; display: block; color: var(--color-primary-light);">
+              sessionId = `session-\${Math.random().toString(36).substring(2, 15)}`;
+            </code>
+            <p style="margin-top: 1rem;">
+              This isolates database Valkey writes cleanly without cross-thread cart conflicts.
+            </p>
+          </div>
+
+          <div class="info-card">
+            <h3 class="info-card-title"><span style="color: var(--color-warning);">⚠️</span> Flaky Test Index & Quarantine</h3>
+            <p>
+              Flaky tests degrade confidence in CI pipelines. We enforce a strict **Flaky Test Index SLA (&lt; 1%)**:
+            </p>
+            <ul class="bullet-list">
+              <li>**Quarantine Gate**: Any test that exhibits flakiness is dynamically tagged and isolated from blocking release pipelines.</li>
+              <li>**Developer Notification**: The owning service team is automatically alerted.</li>
+              <li>**Resolution Window**: Quarantined tests must be repaired within **48 hours**, or they are deleted from the repository.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Tab switching logic
+    function switchTab(event, tabId) {
+      // Hide all panels
+      const panels = document.querySelectorAll('.section-panel');
+      panels.forEach(panel => panel.classList.remove('active'));
+
+      // Deactivate all sidebar items
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => item.classList.remove('active'));
+
+      // Show target panel
+      document.getElementById(tabId).classList.add('active');
+
+      // Set active nav item
+      if (event) {
+        event.currentTarget.classList.add('active');
+      }
+    }
+
+    // Light/Dark Theme toggle logic
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+
+    themeToggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('light-theme');
+      
+      const isLight = document.body.classList.contains('light-theme');
+      themeIcon.textContent = isLight ? '🌙' : '☀️';
+      themeText.textContent = isLight ? 'Dark Theme' : 'Light Theme';
+    });
+  </script>
+</body>
+</html>

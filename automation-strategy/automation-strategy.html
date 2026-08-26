@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Engineering Automation Strategy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030712;
+            --panel-bg: rgba(17, 24, 39, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.2);
+            
+            --color-primary: #6366f1;
+            --color-primary-light: #818cf8;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-cyan: #06b6d4;
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --card-hover-bg: rgba(255, 255, 255, 0.02);
+            
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'Fira Code', monospace;
+        }
+
+        /* Light Mode Overrides */
+        body.light-theme {
+            --bg-color: #f8fafc;
+            --panel-bg: rgba(255, 255, 255, 0.85);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.15);
+            
+            --color-primary: #4f46e5;
+            --color-primary-light: #6366f1;
+            --color-success: #059669;
+            --color-warning: #d97706;
+            --color-danger: #dc2626;
+            --color-cyan: #0891b2;
+            
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --card-hover-bg: rgba(0, 0, 0, 0.01);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0, transparent 40%);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.25rem 2.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            background: rgba(3, 7, 18, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        body.light-theme header {
+            background: rgba(248, 250, 252, 0.8);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-cyan));
+            color: #ffffff;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: var(--font-display);
+        }
+
+        .header-titles h1 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header-titles p {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 0.1rem;
+        }
+
+        .meta-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .meta-badges {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+        }
+
+        .meta-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            display: flex;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-badge strong {
+            color: var(--text-primary);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            flex-grow: 1;
+            height: calc(100vh - 69px);
+        }
+
+        /* Sidebar Navigation */
+        nav {
+            background: rgba(3, 7, 18, 0.4);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        body.light-theme nav {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: var(--card-hover-bg);
+        }
+
+        .nav-link.active {
+            color: var(--color-primary-light);
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 2.5rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .section-container {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        /* Generic Card Styling */
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            border-color: var(--border-glow);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.04);
+        }
+
+        /* Callout Box Styling */
+        .callout-box {
+            border-left: 4px solid var(--color-primary);
+            background: rgba(99, 102, 241, 0.05);
+            border-radius: 0 8px 8px 0;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .callout-box.sla-callout {
+            border-left-color: var(--color-success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .callout-box.warning-callout {
+            border-left-color: var(--color-warning);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .callout-title {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout-content {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Tooling Matrix (Section 1) */
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.02);
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight-pw {
+            background: rgba(99, 102, 241, 0.03);
+            font-weight: 500;
+        }
+
+        .badge-positive {
+            color: var(--color-success);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-neutral {
+            color: var(--color-warning);
+            background: rgba(245, 158, 11, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-negative {
+            color: var(--color-danger);
+            background: rgba(239, 68, 68, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Tooling Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+        }
+
+        .feature-card h4 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            color: var(--color-primary-light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Team Pods Navigation (Section 2) */
+        .pod-selector-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .pod-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .pod-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .pod-btn:hover {
+            border-color: var(--color-primary-light);
+            background: var(--card-hover-bg);
+        }
+
+        .pod-btn.active {
+            border-color: var(--color-primary);
+            background: rgba(99, 102, 241, 0.06);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .pod-btn h3 {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .pod-btn p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .pod-details-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            justify-content: center;
+        }
+
+        .pod-details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .pod-details-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color-primary-light);
+        }
+
+        .pod-lead-badge {
+            font-size: 0.75rem;
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--color-cyan);
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .pod-details-body p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .services-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+        }
+
+        .pod-spec-focus {
+            background: rgba(99, 102, 241, 0.03);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .pod-spec-focus h5 {
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .pod-spec-focus ul {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding-left: 1.25rem;
+        }
+
+        .pod-spec-focus li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Architecture Standard Accordion */
+        .arch-standard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .arch-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .arch-header {
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .arch-header h4 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .arch-header .arrow {
+            font-size: 0.8rem;
+            transform: rotate(0deg);
+            transition: transform 0.2s ease;
+        }
+
+        .arch-card.expanded .arch-header .arrow {
+            transform: rotate(90deg);
+        }
+
+        .arch-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease-out, padding 0.25s ease-out;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .arch-card.expanded .arch-content {
+            padding: 1.25rem;
+            max-height: 500px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .arch-content pre {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            overflow-x: auto;
+            margin-top: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* CI/CD Timeline (Section 3) */
+        .timeline-container {
+            position: relative;
+            margin: 2.5rem 0;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: calc(-2rem - 6px);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            border: 2px solid var(--bg-color);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover .timeline-marker {
+            transform: scale(1.3);
+            box-shadow: 0 0 10px var(--color-primary);
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .timeline-sla-badge {
+            font-size: 0.7rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .timeline-content {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Failure Loop Cards */
+        .failure-loop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .failure-card {
+            background: rgba(239, 68, 68, 0.02);
+            border: 1px solid rgba(239, 68, 68, 0.1);
+            padding: 1.25rem;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .failure-card:hover {
+            border-color: rgba(239, 68, 68, 0.25);
+            box-shadow: 0 8px 30px rgba(239, 68, 68, 0.03);
+        }
+
+        .failure-card h4 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            color: var(--color-danger);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .failure-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Data Isolation (Section 4) */
+        .flowchart-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .flowchart-step {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            min-width: 160px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .flowchart-arrow {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+        }
+
+        .data-card h4 {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            color: var(--color-cyan);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .data-card p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Flakiness Dial / Simulator (Section 5) */
+        .flakiness-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .flakiness-calc-card {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.6rem 0.85rem;
+            border-radius: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+
+        .input-group input:focus {
+            border-color: var(--color-primary-light);
+            outline: none;
+        }
+
+        .dial-visualizer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .dial-svg {
+            transform: rotate(-90deg);
+        }
+
+        .dial-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.04);
+            stroke-width: 8;
+        }
+
+        .dial-progress {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.35s ease, stroke 0.35s ease;
+        }
+
+        .dial-text-container {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dial-percentage {
+            font-family: var(--font-display);
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        .dial-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.1rem;
+        }
+
+        .dial-status-badge {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .status-pass {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--color-success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-fail {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--color-danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            nav {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: row;
+                overflow-x: auto;
+                padding: 1rem;
+            }
+            .content-area {
+                padding: 1.5rem;
+            }
+            .pod-selector-container, .flakiness-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <header>
+        <div class="logo-section">
+            <div class="logo-badge">🛡️</div>
+            <div class="header-titles">
+                <h1>QE Automation Strategy</h1>
+                <p>20 Polyglot Microservices | Team of 4 QA Engineers</p>
+            </div>
+        </div>
+        <div class="meta-actions">
+            <div class="meta-badges">
+                <div class="meta-badge">Role: <strong>Manager</strong></div>
+                <div class="meta-badge">Version: <strong>1.0.0</strong></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Light/Dark Theme">🌓</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Floating Sidebar Table of Contents -->
+        <nav id="sidebar-toc">
+            <a class="nav-link active" onclick="showTab(1)">
+                <span>1. Tooling Selection</span>
+            </a>
+            <a class="nav-link" onclick="showTab(2)">
+                <span>2. Scaling Strategy</span>
+            </a>
+            <a class="nav-link" onclick="showTab(3)">
+                <span>3. CI/CD Orchestration</span>
+            </a>
+            <a class="nav-link" onclick="showTab(4)">
+                <span>4. Test Data Strategy</span>
+            </a>
+            <a class="nav-link" onclick="showTab(5)">
+                <span>5. Flakiness SLA</span>
+            </a>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            
+            <!-- Section 1: Tooling Selection & Rationale -->
+            <section class="section-container active" id="sec-1">
+                <h2>1. Tooling Selection & Rationale</h2>
+                <p class="section-subtitle">Why Playwright (TypeScript) is selected as our core testing engine for the Astronomy Shop microservices.</p>
+                
+                <div class="card">
+                    <p style="font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary); margin-bottom: 1.25rem;">
+                        Our polyglot application ecosystem incorporates services written in Go, C#, C++, Java, Node.js, PHP, and Ruby. Evaluating an automation framework requires lookups beyond simple browser scripts: we require unified REST/gRPC client integrations alongside robust rendering execution. Playwright provides native advantages over traditional runners.
+                    </p>
+
+                    <div class="comparison-table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Criteria</th>
+                                    <th class="highlight-pw">Playwright (TS)</th>
+                                    <th>Cypress (JS)</th>
+                                    <th>Selenium (Java/Python)</th>
+                                    <th>Pytest (Python)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>API & UI in One Engine</strong></td>
+                                    <td class="highlight-pw"><span class="badge-positive">Supported (Native)</span></td>
+                                    <td><span class="badge-neutral">Limited (In-Browser)</span></td>
+                                    <td><span class="badge-negative">No (Requires libs)</span></td>
+                                    <td><span class="badge-neutral">No (Requires wrappers)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Execution Speed</strong></td>
+                                    <td class="highlight-pw"><span class="badge-positive">Native Headless (Fast)</span></td>
+                                    <td><span class="badge-neutral">Moderate (In-Browser)</span></td>
+                                    <td><span class="badge-negative">Slow (HTTP driver overhead)</span></td>
+                                    <td><span class="badge-positive">Fast (For APIs only)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Trace Viewer</strong></td>
+                                    <td class="highlight-pw"><span class="badge-positive">Yes (Full DOM, Network)</span></td>
+                                    <td><span class="badge-neutral">Yes (DOM snapshots only)</span></td>
+                                    <td><span class="badge-negative">No (Requires third-party)</span></td>
+                                    <td><span class="badge-negative">No (Raw logs only)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Async Handling</strong></td>
+                                    <td class="highlight-pw"><span class="badge-positive">Auto-waiting (Promises)</span></td>
+                                    <td><span class="badge-neutral">Internal Sync Queue</span></td>
+                                    <td><span class="badge-negative">Manual Explicit Waits</span></td>
+                                    <td><span class="badge-negative">Manual Polling Loops</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="callout-box">
+                        <div class="callout-title">💡 Technical Rationale Highlight</div>
+                        <div class="callout-content">
+                            Playwright interacts directly with browser debugging protocols (CDP/WDP) over a single websocket socket connection. This bypasses the network overhead of Selenium's HTTP-to-driver translation layer, while allowing us to bypass Cypress's internal proxy constraints, enabling dynamic cross-domain API injections in our microservices tests.
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Key Playwright Capabilities</h3>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h4>⚡ Headless Speed</h4>
+                        <p>Direct process orchestration allows parallel headless browsers to load and execute in isolated threads with minimal memory leaks.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔍 built-in Trace Viewer</h4>
+                        <p>Enables full post-execution debugging, capturing execution timelines, DOM snapshots, network payloads, and console streams.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🔄 Auto-waiting</h4>
+                        <p>Native locator assertions wait automatically for elements to be attached, visible, stable, and clickable, resolving classic asynchronous delays.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Scaling Strategy for a Team of 4 QA Engineers -->
+            <section class="section-container" id="sec-2">
+                <h2>2. Scaling Strategy & Team Architecture</h2>
+                <p class="section-subtitle">How 1 EM and 4 QA Engineers maintain stability across 20 polyglot microservices without stepping on each other's toes.</p>
+                
+                <div class="card">
+                    <h3>Domain-Pod Team Topography</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        To scale quality execution, each QA Engineer is assigned as the Quality Lead for one of four Domain Pods, maintaining test architecture patterns inside their sub-domain boundary.
+                    </p>
+
+                    <div class="pod-selector-container">
+                        <div class="pod-buttons">
+                            <button class="pod-btn active" onclick="selectPod(0)">
+                                <h3>Core Storefront</h3>
+                                <p>5 Services | Storefront frontend UI</p>
+                            </button>
+                            <button class="pod-btn" onclick="selectPod(1)">
+                                <h3>Order & Fulfillment</h3>
+                                <p>5 Services | Checkout & Shipping</p>
+                            </button>
+                            <button class="pod-btn" onclick="selectPod(2)">
+                                <h3>Supporting Services</h3>
+                                <p>6 Services | Payments & Caches</p>
+                            </button>
+                            <button class="pod-btn" onclick="selectPod(3)">
+                                <h3>Telemetry & Infra</h3>
+                                <p>4 Services | Collectors & Pipelines</p>
+                            </button>
+                        </div>
+                        <div class="pod-details-panel" id="pod-details-container">
+                            <div class="pod-details-header">
+                                <div class="pod-details-title" id="pod-title">Core Storefront Pod</div>
+                                <span class="pod-lead-badge" id="pod-lead">QA Lead 1</span>
+                            </div>
+                            <div class="pod-details-body">
+                                <p id="pod-description">Responsible for browser compatibility, UI responsiveness, customer-facing recommendation blocks, and rendering attributes check.</p>
+                                <div class="services-list" id="pod-services">
+                                    <span class="service-tag">frontend</span>
+                                    <span class="service-tag">frontend-proxy</span>
+                                    <span class="service-tag">adservice</span>
+                                    <span class="service-tag">recommendation</span>
+                                    <span class="service-tag">image-provider</span>
+                                </div>
+                                <div class="pod-spec-focus">
+                                    <h5>Automation Scope Focus</h5>
+                                    <ul id="pod-focus-list">
+                                        <li>Cross-browser UI functionality layout</li>
+                                        <li>Eventual consistency DOM state transitions</li>
+                                        <li>User browser console telemetry tracking</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Codebase Architectural Standards</h3>
+                <div class="arch-standard-grid">
+                    <div class="arch-card expanded" id="arch-1">
+                        <div class="arch-header" onclick="toggleArch(1)">
+                            <h4>1. Page Object Model (POM) for UI</h4>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="arch-content">
+                            Exposes selectors as typed properties targeting static test locators (`data-testid`), and hides actions in async methods.
+                            <pre>
+export class CheckoutPage {
+  private readonly payButton = this.page.locator('[data-testid="pay-button"]');
+  async submitPayment() {
+    await this.payButton.click();
+  }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" id="arch-2">
+                        <div class="arch-header" onclick="toggleArch(2)">
+                            <h4>2. API Client Abstractions for Backend Specs</h4>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="arch-content">
+                            Keeps API calls clean and decoupled from test scripts. Isolates gRPC / REST network client configurations into dedicated wrapper classes.
+                            <pre>
+export class CartClient {
+  async addProduct(userId: string, productId: string) {
+    return await this.request.post(`/api/cart/${userId}`, { productId });
+  }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="arch-card" id="arch-3">
+                        <div class="arch-header" onclick="toggleArch(3)">
+                            <h4>3. Modular Custom Fixtures</h4>
+                            <span class="arrow">▶</span>
+                        </div>
+                        <div class="arch-content">
+                            Automatically injects preset data, tokens, and active browser sessions into test blocks, removing code repetition inside hooks.
+                            <pre>
+test('User Checkout', async ({ authenticatedCart, checkoutPage }) => {
+  await checkoutPage.navigateTo();
+  await checkoutPage.submitPayment();
+});</pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: CI/CD Quality Gates & Execution Triggers -->
+            <section class="section-container" id="sec-3">
+                <h2>3. CI/CD Pipeline Orchestration</h2>
+                <p class="section-subtitle">Continuous Integration Quality Gates executing on GitHub Actions / GitLab CI with defined execution triggers and SLAs.</p>
+                
+                <div class="card">
+                    <h3>Pipeline Execution Stages</h3>
+                    
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-header">
+                                <span class="timeline-title">Stage 1: Pre-Commit (Local Dev)</span>
+                                <span class="timeline-sla-badge">SLA: &lt; 10 Seconds</span>
+                            </div>
+                            <div class="timeline-content">
+                                Triggers locally on Git commit via Husky. Runs code formatting tests, lint checks (ESLint), and Protobuf definition checks (`buf lint`).
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="background: var(--color-cyan);"></div>
+                            <div class="timeline-header">
+                                <span class="timeline-title">Stage 2: PR Build Gate</span>
+                                <span class="timeline-sla-badge">SLA: &lt; 5 Minutes</span>
+                            </div>
+                            <div class="timeline-content">
+                                Triggers on Pull Request creation. Compiles modified containers, executes unit suites, gRPC contract validations, and critical UI path smoke tests.
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="background: var(--color-warning);"></div>
+                            <div class="timeline-header">
+                                <span class="timeline-title">Stage 3: Merge to Main</span>
+                                <span class="timeline-sla-badge">SLA: &lt; 15 Minutes</span>
+                            </div>
+                            <div class="timeline-content">
+                                Triggers on push or merge events to the main branch. Deploys to staging sandbox. Executes full API regressions and service boundary checks.
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-marker" style="background: var(--color-success);"></div>
+                            <div class="timeline-header">
+                                <span class="timeline-title">Stage 4: Nightly Runs</span>
+                                <span class="timeline-sla-badge">SLA: &lt; 1 Hour</span>
+                            </div>
+                            <div class="timeline-content">
+                                Triggers at 2:00 AM UTC. Runs full cross-browser matrices, pixel-diff visual tests, security dependency scans, and performance load tests (k6).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Failure Signal Integration & Alerts</h3>
+                <div class="failure-loop-grid">
+                    <div class="failure-card">
+                        <h4>💬 Slack & Teams Webhooks</h4>
+                        <p>Automated notifications flag failures in real-time, detailing the failing test name, author, logs, and embedding direct links to the Playwright Trace Viewer artifact hosted on AWS S3.</p>
+                    </div>
+                    <div class="failure-card">
+                        <h4>✍️ GitHub PR Annotations</h4>
+                        <p>Test assertions annotate failing code directly on the PR source code diff. Lines triggering errors present stack traces instantly, keeping developers within their Git workflow.</p>
+                    </div>
+                    <div class="failure-card">
+                        <h4>🎟️ JIRA Ticket Auto-Creation</h4>
+                        <p>Nightly failures lingering unfixed for 4 hours automatically trigger JIRA issue generation, assigning triage tickets to the responsible domain pod leads.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Test Data Strategy & State Isolation -->
+            <section class="section-container" id="sec-4">
+                <h2>4. Test Data Strategy & State Isolation</h2>
+                <p class="section-subtitle">Eliminating db pollution and test sequencing dependency through dynamic API setups and clean context boundary isolation.</p>
+                
+                <div class="card">
+                    <h3>Dynamic API Setup Workflow</h3>
+                    
+                    <div class="flowchart-container">
+                        <div class="flowchart-step">1. Generate Unique UUIDs<br><span style="font-size:0.65rem;color:var(--text-muted)">Runtime variables</span></div>
+                        <div class="flowchart-arrow">→</div>
+                        <div class="flowchart-step">2. Call Backend API<br><span style="font-size:0.65rem;color:var(--text-muted)">Inject isolated context state</span></div>
+                        <div class="flowchart-arrow">→</div>
+                        <div class="flowchart-step">3. Launch Playwright<br><span style="font-size:0.65rem;color:var(--text-muted)">Inject session cookies</span></div>
+                        <div class="flowchart-arrow">→</div>
+                        <div class="flowchart-step">4. Execute Test Specs<br><span style="font-size:0.65rem;color:var(--text-muted)">Assert actions</span></div>
+                        <div class="flowchart-arrow">→</div>
+                        <div class="flowchart-step">5. Flush Valkey Cart<br><span style="font-size:0.65rem;color:var(--text-muted)">Programmatic teardown</span></div>
+                    </div>
+
+                    <div class="callout-box sla-callout">
+                        <div class="callout-title">📌 No Shared Global Databases</div>
+                        <div class="callout-content">
+                            Tests must run completely stateless. Generating unique user models and active carts using backend endpoints prevents database contention, race conditions, and test pipeline lockouts.
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Data Isolation Columns</h3>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <h4>🔑 UUID Account Setup</h4>
+                        <p>Runtime test runs automatically spin up isolated UUID users (`test_user_7b89...`). Each user is dedicated to a single test block and deleted immediately upon teardown.</p>
+                    </div>
+                    <div class="data-card">
+                        <h4>🧩 Atomic Data Fixtures</h4>
+                        <p>Static payload schemas are kept immutable in the repository. The runner merges dynamic attributes into these JSON templates at runtime to guarantee contract validity.</p>
+                    </div>
+                    <div class="data-card">
+                        <h4>🧹 Cache Key Flushing</h4>
+                        <p>Between test runs, playbooks trigger custom endpoints to purge specific Valkey database partitions, ensuring next runs begin with zero cached state leakage.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Flakiness Management & SLA Guardrails -->
+            <section class="section-container" id="sec-5">
+                <h2>5. Flakiness Management & SLA Guardrails</h2>
+                <p class="section-subtitle">Enforcing zero-tolerance guidelines and tracking the Flaky Test Index (FTI) to keep CI pipelines green.</p>
+                
+                <div class="card">
+                    <h3>Flakiness Action Rules</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                        We implement three concrete guidelines to address flaky execution:
+                    </p>
+                    <ul style="font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 1.5rem;">
+                        <li><strong>Native Auto-Waiting:</strong> Zero hardcoded sleeps (`page.waitForTimeout()`). Tests must wait on dynamic element visibility transitions.</li>
+                        <li><strong>CI-Only Retry Budgets:</strong> 0 retries permitted locally during development. Maximum of 2 retries allowed in CI to bypass intermittent pipeline networks.</li>
+                        <li><strong>Automatic `@flaky` Quarantine:</strong> Flaking tests are immediately demoted to parallel non-blocking paths, preventing pipeline blocks.</li>
+                    </ul>
+                </div>
+
+                <div class="flakiness-layout">
+                    <!-- FTI Calculator Form -->
+                    <div class="flakiness-calc-card">
+                        <h4 style="color: var(--text-primary); font-family: var(--font-display);">Flaky Test Index (FTI) Triage Simulator</h4>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary);">
+                            Enter test execution counts to simulate the automatic triage and quarantine system.
+                        </p>
+                        <div class="input-group">
+                            <label>Total Test Runs (Last 7 Days)</label>
+                            <input type="number" id="fti-runs" value="500" oninput="calculateFTI()">
+                        </div>
+                        <div class="input-group">
+                            <label>Retried or Flaked Runs</label>
+                            <input type="number" id="fti-flakes" value="15" oninput="calculateFTI()">
+                        </div>
+                    </div>
+
+                    <!-- FTI Metric Dial Gauge -->
+                    <div class="dial-visualizer">
+                        <svg class="dial-svg" width="160" height="160">
+                            <circle class="dial-bg" cx="80" cy="80" r="70"></circle>
+                            <circle class="dial-progress" id="dial-progress-circle" cx="80" cy="80" r="70" stroke="var(--color-danger)" stroke-dasharray="439.8" stroke-dashoffset="100"></circle>
+                        </svg>
+                        <div class="dial-text-container">
+                            <span class="dial-percentage" id="dial-percent-text">3.0%</span>
+                            <span class="dial-label">Flaky Index</span>
+                        </div>
+                        <div class="dial-status-badge status-fail" id="dial-status">Quarantined (FTI > 2%)</div>
+                    </div>
+                </div>
+
+                <div class="callout-box warning-callout" style="margin-top: 2rem;">
+                    <div class="callout-title">⚠️ Quarantined Triage SLA</div>
+                    <div class="callout-content">
+                        Any test whose Flaky Test Index exceeds <strong>2%</strong> over a 7-day period is automatically demoted from the CI blocking gate. The assigned owner must triage and fix the test within <strong>48 hours</strong>; otherwise, the test is completely disabled until it passes 50 consecutive runs.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Tab / Section Switching Navigation
+        function showTab(tabId) {
+            document.querySelectorAll('.nav-link').forEach((link, idx) => {
+                if (idx + 1 === tabId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.section-container').forEach((sec, idx) => {
+                if (idx + 1 === tabId) {
+                    sec.classList.add('active');
+                } else {
+                    sec.classList.remove('active');
+                }
+            });
+        }
+
+        // Theme Toggle (Light/Dark Mode)
+        function toggleTheme() {
+            const body = document.body;
+            if (body.classList.contains('dark-theme')) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+            }
+        }
+
+        // Domain Pod Selection Data
+        const podData = [
+            {
+                title: "Core Storefront Pod",
+                lead: "QA Lead 1",
+                desc: "Responsible for browser compatibility, UI responsiveness, customer-facing recommendation blocks, and rendering attributes check.",
+                services: ["frontend", "frontend-proxy", "adservice", "recommendation", "image-provider"],
+                focus: [
+                    "Cross-browser UI functionality layout",
+                    "Eventual consistency DOM state transitions",
+                    "User browser console telemetry tracking"
+                ]
+            },
+            {
+                title: "Order & Fulfillment Pod",
+                lead: "QA Lead 2",
+                desc: "Responsible for transactional order completions, shipping calculations, email confirmations, and downstream queue publishing.",
+                services: ["checkoutservice", "shippingservice", "quoteservice", "emailservice", "kafka"],
+                focus: [
+                    "gRPC orchestration sequence consistency",
+                    "Asynchronous Kafka event broker delivery",
+                    "Payment validation retry boundaries"
+                ]
+            },
+            {
+                title: "Supporting Services Pod",
+                lead: "QA Lead 3",
+                desc: "Responsible for payment integrations, database queries, shopping carts, currency precision calculations, and cache state consistency.",
+                services: ["paymentservice", "cartservice", "currencyservice", "accountingservice", "fraud-detection", "astronomy-db"],
+                focus: [
+                    "Database write validation tests",
+                    "Valkey/Redis cart cache isolation validation",
+                    "Currency float-point nano-precision calculations"
+                ]
+            },
+            {
+                title: "Telemetry & Infra Pod",
+                lead: "QA Lead 4",
+                desc: "Responsible for trace integrations, feature flags, load generators, automated quality check gates, and collector status checks.",
+                services: ["otel-collector", "flagd", "load-generator", "CI/CD Staging Pipelines"],
+                focus: [
+                    "OpenTelemetry collector trace verification",
+                    "Feature flag permutation checks",
+                    "Load capacity stress boundaries (k6)"
+                ]
+            }
+        ];
+
+        function selectPod(idx) {
+            document.querySelectorAll('.pod-btn').forEach((btn, i) => {
+                if (i === idx) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            const data = podData[idx];
+            document.getElementById('pod-title').innerText = data.title;
+            document.getElementById('pod-lead').innerText = data.lead;
+            document.getElementById('pod-description').innerText = data.desc;
+
+            // Render Services Tags
+            const servicesContainer = document.getElementById('pod-services');
+            servicesContainer.innerHTML = '';
+            data.services.forEach(svc => {
+                const span = document.createElement('span');
+                span.className = 'service-tag';
+                span.innerText = svc;
+                servicesContainer.appendChild(span);
+            });
+
+            // Render Focus List
+            const focusContainer = document.getElementById('pod-focus-list');
+            focusContainer.innerHTML = '';
+            data.focus.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                focusContainer.appendChild(li);
+            });
+        }
+
+        // Accordion Management for Standards
+        function toggleArch(id) {
+            const card = document.getElementById(`arch-${id}`);
+            const isExpanded = card.classList.contains('expanded');
+            
+            // Collapse all
+            document.querySelectorAll('.arch-card').forEach(c => {
+                c.classList.remove('expanded');
+            });
+
+            if (!isExpanded) {
+                card.classList.add('expanded');
+            }
+        }
+
+        // Flaky Test Index Dial Calculator
+        function calculateFTI() {
+            const runsInput = document.getElementById('fti-runs');
+            const flakesInput = document.getElementById('fti-flakes');
+            
+            const runs = parseFloat(runsInput.value) || 0;
+            const flakes = parseFloat(flakesInput.value) || 0;
+            
+            let fti = 0;
+            if (runs > 0) {
+                fti = (flakes / runs) * 100;
+            }
+            
+            fti = Math.min(fti, 100); // Caps it at 100%
+            
+            // Format percentage text
+            document.getElementById('dial-percent-text').innerText = fti.toFixed(1) + '%';
+            
+            // Calculate SVG Dial stroke-dashoffset
+            const radius = 70;
+            const circumference = 2 * Math.PI * radius; // 439.8
+            const progress = fti / 100;
+            const offset = circumference - (progress * circumference);
+            
+            const progressCircle = document.getElementById('dial-progress-circle');
+            progressCircle.style.strokeDashoffset = offset;
+            
+            // Set dial color and status label
+            const statusBadge = document.getElementById('dial-status');
+            if (fti <= 2.0) {
+                progressCircle.style.stroke = 'var(--color-success)';
+                statusBadge.className = 'dial-status-badge status-pass';
+                statusBadge.innerText = 'CI Blocking (FTI ≤ 2%)';
+            } else {
+                progressCircle.style.stroke = 'var(--color-danger)';
+                statusBadge.className = 'dial-status-badge status-fail';
+                statusBadge.innerText = 'Quarantined (FTI > 2%)';
+            }
+        }
+
+        // Initial setup run
+        calculateFTI();
+    </script>
+</body>
+</html>
