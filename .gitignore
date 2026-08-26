@@ -12,6 +12,15 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# Playwright test execution artifacts
+automation/test-results/
+automation/playwright-report/
+automation/blob-report/
+
+# Suite execution logs and reports (generated locally during runs)
+automation/logs/
+automation/reports/
+
 # IDE / Editor configurations
 .vscode/
 .idea/
