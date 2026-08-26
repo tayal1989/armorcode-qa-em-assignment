@@ -1,0 +1,24 @@
+{
+  "api": {
+    "productId": "0PUK6V6EV0",
+    "currencyCode": "USD",
+    "quantityNormal": 3,
+    "quantityNegative": -5,
+    "quantityOverflow": 2147483648
+  },
+  "ui": {
+    "cartQuantity1": 3,
+    "cartQuantity2": 2,
+    "checkout": {
+      "email": "engineering.manager@armorcode.com",
+      "streetAddress": "100 Main Street",
+      "zipCode": "95113",
+      "city": "San Jose",
+      "state": "CA",
+      "country": "United States",
+      "creditCardNumber": "4432-8015-6152-0454",
+      "creditCardExpirationMonth": "8",
+      "creditCardCvv": "672"
+    }
+  }
+}
