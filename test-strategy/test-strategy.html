@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Engineering Strategy Dashboard - Astronomy Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030712;
+            --panel-bg: rgba(17, 24, 39, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(99, 102, 241, 0.2);
+            
+            --color-primary: #6366f1;
+            --color-primary-light: #818cf8;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --color-cyan: #06b6d4;
+            
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 27, 75, 0.35) 0, transparent 40%),
+                radial-gradient(at 100% 100%, rgba(17, 24, 39, 0.5) 0, transparent 40%),
+                radial-gradient(at 50% 50%, rgba(99, 102, 241, 0.03) 0, transparent 50%);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.5rem 3rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            background: rgba(3, 7, 18, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-badge {
+            background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+            color: #030712;
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .header-titles h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header-titles p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.1rem;
+        }
+
+        .meta-badges {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.8rem;
+        }
+
+        .meta-badge {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            display: flex;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-badge strong {
+            color: var(--text-primary);
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            flex-grow: 1;
+            height: calc(100vh - 74px);
+        }
+
+        /* Navigation Side Panel */
+        nav {
+            background: rgba(3, 7, 18, 0.6);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--color-primary-light);
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+        }
+
+        /* Content Container */
+        .content-area {
+            padding: 2.5rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .section-container {
+            display: none; /* Controlled by tab state */
+            animation: fadeIn 0.3s ease-out;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Risk Cards (Section 1) */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--border-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.12);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.25);
+        }
+
+        .badge-primary {
+            background: rgba(99, 102, 241, 0.12);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.25);
+        }
+
+        .card-details-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card-detail-item {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .card-detail-item strong {
+            color: var(--color-primary-light);
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+
+        /* Interactive Test Pyramid (Section 2) */
+        .pyramid-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem;
+            backdrop-filter: blur(16px);
+        }
+
+        .pyramid-visual {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            perspective: 600px;
+        }
+
+        .pyramid-layer {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            font-family: 'Space Grotesk', sans-serif;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .pyramid-layer::after {
+            content: attr(data-percentage);
+            position: absolute;
+            right: 1.5rem;
+            font-size: 0.75rem;
+            opacity: 0.6;
+        }
+
+        .pyramid-layer:hover {
+            transform: translateZ(20px);
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.1));
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .layer-e2e {
+            width: 180px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(239, 68, 68, 0.1) 100%);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+        .layer-perf {
+            width: 250px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.35) 0%, rgba(245, 158, 11, 0.1) 100%);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        .layer-integ {
+            width: 320px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(16, 185, 129, 0.1) 100%);
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+        .layer-contract {
+            width: 390px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.35) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border-color: rgba(6, 182, 212, 0.4);
+        }
+        .layer-unit {
+            width: 460px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35) 0%, rgba(99, 102, 241, 0.1) 100%);
+            border-color: rgba(99, 102, 241, 0.4);
+        }
+
+        .pyramid-layer.active-layer {
+            border-color: #ffffff !important;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.25)) !important;
+            transform: scale(1.03) translateZ(10px);
+        }
+
+        .pyramid-detail-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.35rem;
+            color: var(--color-primary-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .pyramid-detail-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .pyramid-specs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .spec-label { color: var(--text-secondary); }
+        .spec-val { font-weight: 600; font-family: 'Fira Code', monospace; }
+
+        /* Deliberate Gaps grid */
+        .gaps-container {
+            margin-top: 2rem;
+        }
+
+        .gaps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gap-card {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .gap-card h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-warning);
+            margin-bottom: 0.5rem;
+        }
+
+        .gap-card p {
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        /* Pod Structure (Section 3) */
+        .pods-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pod-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .pod-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .pod-num {
+            font-size: 0.75rem;
+            color: var(--color-primary-light);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .pod-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 0.15rem;
+        }
+
+        .pod-list-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .pod-services {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+        }
+
+        .service-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-primary);
+        }
+
+        .pod-focus {
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+
+        /* CI/CD Quality Gates Pipeline (Section 4) */
+        .pipeline-wrapper {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2.5rem;
+            backdrop-filter: blur(16px);
+        }
+
+        .pipeline-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        .pipeline-flow::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 2rem;
+            right: 2rem;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .pipeline-connector-active {
+            position: absolute;
+            top: 50%;
+            left: 2rem;
+            height: 2px;
+            background: linear-gradient(to right, var(--color-primary), var(--color-success));
+            z-index: 2;
+            transform: translateY(-50%);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .pipeline-step {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: #0b0f19;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 3;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pipeline-step::after {
+            content: attr(data-label);
+            position: absolute;
+            top: 4.25rem;
+            width: 120px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--text-secondary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .pipeline-step:hover {
+            border-color: var(--color-primary-light);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+        }
+
+        .pipeline-step.active {
+            background: var(--color-primary);
+            border-color: var(--color-primary-light);
+            color: #030712;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+        }
+
+        .pipeline-step.passed {
+            background: var(--color-success);
+            border-color: #34d399;
+            color: #030712;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .gate-inspector {
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .gate-inspector h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            color: var(--color-primary-light);
+            margin-bottom: 1rem;
+        }
+
+        .inspector-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .inspector-col h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .inspector-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .inspector-col li {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .inspector-col li::before {
+            content: '✓';
+            color: var(--color-success);
+            font-weight: bold;
+        }
+
+        .inspector-col.criteria li::before {
+            content: '→';
+            color: var(--color-primary-light);
+        }
+
+        /* Metrics Grid (Section 5) */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(16px);
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-value-container {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+        }
+
+        .metric-svg {
+            transform: rotate(-90deg);
+        }
+
+        .metric-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 6;
+        }
+
+        .metric-progress {
+            fill: none;
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease;
+        }
+
+        .metric-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .metric-sla {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .metric-sla strong {
+            color: var(--color-success);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-section">
+            <div class="logo-badge">🪐</div>
+            <div class="header-titles">
+                <h1>QUALITY STRATEGY DASHBOARD</h1>
+                <p>Astronomy Shop Microservices</p>
+            </div>
+        </div>
+        <div class="meta-badges">
+            <div class="meta-badge">
+                Role: <strong>QA Engineering Manager</strong>
+            </div>
+            <div class="meta-badge">
+                Version: <strong>1.0.0</strong>
+            </div>
+            <div class="meta-badge">
+                Scope: <strong>Polyglot QA</strong>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <!-- Sidebar Navigation -->
+        <nav>
+            <div class="nav-link active" onclick="showTab(1)">
+                <span>⚠️</span> High-Risk Flows
+            </div>
+            <div class="nav-link" onclick="showTab(2)">
+                <span>📐</span> Test Pyramid
+            </div>
+            <div class="nav-link" onclick="showTab(3)">
+                <span>👥</span> Domain Pods
+            </div>
+            <div class="nav-link" onclick="showTab(4)">
+                <span>⚙️</span> Quality Gates
+            </div>
+            <div class="nav-link" onclick="showTab(5)">
+                <span>📈</span> Metrics & SLAs
+            </div>
+        </nav>
+
+        <!-- Dynamic Content Space -->
+        <main class="content-area">
+            
+            <!-- Section 1: High-Risk Flows -->
+            <div class="section-container active" id="sec-1">
+                <h2>High-Risk Services & Flows</h2>
+                <p class="section-subtitle">Codebase vulnerability analysis across polyglot microservice boundaries.</p>
+                
+                <div class="risk-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Checkout Orchestration Flow</h3>
+                            <span class="badge badge-danger">Critical Risk</span>
+                        </div>
+                        <p class="service-desc" style="font-size:0.8rem; color:var(--text-secondary);">
+                            Coordinates a long chain of synchronous gRPC calls across C#, Go, C++, PHP, and Node.js.
+                        </p>
+                        <div class="card-details-list">
+                            <div class="card-detail-item">
+                                <strong>Cascading Timeout Storms</strong>
+                                Without bulkhead or circuit-breaker protection, an execution halt in Payments halts the Go routines in Checkout, quickly depleting connection pools.
+                            </div>
+                            <div class="card-detail-item">
+                                <strong>Transactional State Desynchronization</strong>
+                                Lacks Saga orchestration. If shipping fails after card authorization, the user is charged for an order that cannot be fulfilled.
+                            </div>
+                            <div class="card-detail-item">
+                                <strong>Compliance Attributes Leakage</strong>
+                                Sets plaintext credit card number and CVV as trace span attributes, propagating PCI leaks directly to exporters.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Financial Blast Radius</h3>
+                            <span class="badge badge-danger">Critical Risk</span>
+                        </div>
+                        <p class="service-desc" style="font-size:0.8rem; color:var(--text-secondary);">
+                            Node.js Payments service performing mock currency transaction calculations.
+                        </p>
+                        <div class="card-details-list">
+                            <div class="card-detail-item">
+                                <strong>Numerical Floating Rounding</strong>
+                                Receives Money models in fractional nano-units. Rounding discrepancies between C++ math conversion and JS parsing can under- or over-charge.
+                            </div>
+                            <div class="card-detail-item">
+                                <strong>Asynchronous Fraud Loop Timing</strong>
+                                The Java fraud service evaluates events *post-checkout*. Mallory (fraudster) completes payment and shipping confirms before fraud is flagged, incurring heavy chargeback bills.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">State Synchronization</h3>
+                            <span class="badge badge-warning">High Risk</span>
+                        </div>
+                        <p class="service-desc" style="font-size:0.8rem; color:var(--text-secondary);">
+                            Valkey cart caching and Postgres database catalog management.
+                        </p>
+                        <div class="card-details-list">
+                            <div class="card-detail-item">
+                                <strong>Pricing Race Conditions</strong>
+                                Product catalog prices recalculated dynamically at checkout. Price changes in DB while cart is open result in customer disputes at payments.
+                            </div>
+                            <div class="card-detail-item">
+                                <strong>Valkey Volatile Storage Eviction</strong>
+                                Carts reside in volatile Valkey cache. Memory pressure can drop cart items, disrupting user sessions.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Test Pyramid -->
+            <div class="section-container" id="sec-2">
+                <h2>Test Pyramid & Gaps</h2>
+                <p class="section-subtitle">Aligning quality efforts against functional verification layers.</p>
+                
+                <div class="pyramid-container">
+                    <div class="pyramid-visual">
+                        <div class="pyramid-layer layer-e2e" data-percentage="5%" onclick="selectLayer('e2e')">E2E System</div>
+                        <div class="pyramid-layer layer-perf" data-percentage="10%" onclick="selectLayer('perf')">Performance</div>
+                        <div class="pyramid-layer layer-integ" data-percentage="20%" onclick="selectLayer('integ')">Integration</div>
+                        <div class="pyramid-layer layer-contract" data-percentage="25%" onclick="selectLayer('contract')">Contract & Schema</div>
+                        <div class="pyramid-layer layer-unit active-layer" data-percentage="40%" onclick="selectLayer('unit')">Unit & Component</div>
+                    </div>
+                    
+                    <div class="pyramid-detail-card" id="pyramidDetails">
+                        <h3 id="layerTitle">Unit & Component Testing</h3>
+                        <p id="layerDesc">Isolates pure business code rules (like tax percentages, ad selectors, or currency conversions) from external dependencies using stubs and mock frameworks.</p>
+                        <div class="pyramid-specs">
+                            <div class="spec-item">
+                                <span class="spec-label">Target Ratio</span>
+                                <span class="spec-val" id="layerRatio">40%</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Primary Tooling</span>
+                                <span class="spec-val" id="layerTooling">xUnit / GoMock / Moq / PyTest</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Execution Phase</span>
+                                <span class="spec-val" id="layerPhase">Local Dev & PR Build Gates</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gaps-container">
+                    <h2 style="font-size:1.35rem; margin-bottom: 1rem;">Deliberate QA Gaps (Un-Automated Areas)</h2>
+                    <div class="gaps-grid">
+                        <div class="gap-card">
+                            <h4>Jaeger/Grafana UI Verifications</h4>
+                            <p>Visual testing of tracing dashboards is highly brittle. We bypass UI testing and instead enforce schema checks using `weaver registry check` directly in pipeline logs.</p>
+                        </div>
+                        <div class="gap-card">
+                            <h4>Visual Recommendation Element Diffing</h4>
+                            <p>Dynamic recommendation content results in high test flakiness. We skip visual checking and verify structurally via DOM element accessibility checks.</p>
+                        </div>
+                        <div class="gap-card">
+                            <h4>Sandbox Third-Party Gateways</h4>
+                            <p>To prevent dependency blocks, sandbox billing interfaces are replaced with local, deterministic mock stubs in daily pipelines.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Domain Pods -->
+            <div class="section-container" id="sec-3">
+                <h2>Quality Ownership in a Domain-Pod Model</h2>
+                <p class="section-subtitle">Distribution of quality leads embedded with developer sprints.</p>
+                
+                <div class="pods-container">
+                    <!-- Pod 1 -->
+                    <div class="pod-card">
+                        <div class="pod-header">
+                            <span class="pod-num">Pod 1</span>
+                            <h3 class="pod-name">Core Storefront</h3>
+                        </div>
+                        <div>
+                            <div class="pod-list-label">Services</div>
+                            <div class="pod-services">
+                                <span class="service-pill">frontend</span>
+                                <span class="service-pill">proxy</span>
+                                <span class="service-pill">adservice</span>
+                                <span class="service-pill">reco</span>
+                            </div>
+                        </div>
+                        <div class="pod-focus">
+                            <strong>Focus Areas:</strong> Client-side performance, browser traces, accessibility, visual layout structure, and SEO checks.
+                        </div>
+                    </div>
+
+                    <!-- Pod 2 -->
+                    <div class="pod-card" style="border-color: var(--color-primary-light);">
+                        <div class="pod-header">
+                            <span class="pod-num" style="color:var(--color-primary);">Pod 2</span>
+                            <h3 class="pod-name">Purchase & Ledger</h3>
+                        </div>
+                        <div>
+                            <div class="pod-list-label">Services</div>
+                            <div class="pod-services">
+                                <span class="service-pill">payments</span>
+                                <span class="service-pill">cart</span>
+                                <span class="service-pill">currency</span>
+                                <span class="service-pill">accounting</span>
+                                <span class="service-pill">fraud</span>
+                            </div>
+                        </div>
+                        <div class="pod-focus">
+                            <strong>Focus Areas:</strong> Currency conversion precision, transaction logs, DB write locking, cart cache evictions, and fraud triggers.
+                        </div>
+                    </div>
+
+                    <!-- Pod 3 -->
+                    <div class="pod-card">
+                        <div class="pod-header">
+                            <span class="pod-num">Pod 3</span>
+                            <h3 class="pod-name">Logistics & Routing</h3>
+                        </div>
+                        <div>
+                            <div class="pod-list-label">Services</div>
+                            <div class="pod-services">
+                                <span class="service-pill">checkout</span>
+                                <span class="service-pill">shipping</span>
+                                <span class="service-pill">quote</span>
+                                <span class="service-pill">email</span>
+                                <span class="service-pill">kafka</span>
+                            </div>
+                        </div>
+                        <div class="pod-focus">
+                            <strong>Focus Areas:</strong> Order transaction pipelines, quote calculations, Kafka broker emissions, and outbox notification checks.
+                        </div>
+                    </div>
+
+                    <!-- Pod 4 -->
+                    <div class="pod-card">
+                        <div class="pod-header">
+                            <span class="pod-num">Pod 4</span>
+                            <h3 class="pod-name">Platform & Perf</h3>
+                        </div>
+                        <div>
+                            <div class="pod-list-label">Services</div>
+                            <div class="pod-services">
+                                <span class="service-pill">otel-col</span>
+                                <span class="service-pill">flagd</span>
+                                <span class="service-pill">loadgen</span>
+                                <span class="service-pill">ci-pipes</span>
+                            </div>
+                        </div>
+                        <div class="pod-focus">
+                            <strong>Focus Areas:</strong> Stress/Load injection metrics, feature flagging regression matrix, pipeline speeds, and schema compliance.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Quality Gates -->
+            <div class="section-container" id="sec-4">
+                <h2>CI/CD Quality Gates</h2>
+                <p class="section-subtitle">Progressive checks preventing regression drops into deployment streams.</p>
+                
+                <div class="pipeline-wrapper">
+                    <div class="pipeline-flow">
+                        <div class="pipeline-connector-active" id="pipelineConnector"></div>
+                        <div class="pipeline-step active" id="step-btn-1" data-label="Pre-Commit" onclick="selectGate(1)">1</div>
+                        <div class="pipeline-step" id="step-btn-2" data-label="PR Build" onclick="selectGate(2)">2</div>
+                        <div class="pipeline-step" id="step-btn-3" data-label="Pre-Merge" onclick="selectGate(3)">3</div>
+                        <div class="pipeline-step" id="step-btn-4" data-label="Nightly" onclick="selectGate(4)">4</div>
+                    </div>
+
+                    <div class="gate-inspector">
+                        <h3 id="gateTitle">Gate 1: Pre-Commit (Local Developer Environment)</h3>
+                        <div class="inspector-grid">
+                            <div class="inspector-col">
+                                <h4>Checks Executed</h4>
+                                <ul id="gateChecks">
+                                    <li>Linter checks (gofmt, RuboCop)</li>
+                                    <li>Protobuf definitions validation</li>
+                                    <li>Quick local unit checks</li>
+                                </ul>
+                            </div>
+                            <div class="inspector-col criteria">
+                                <h4>Pass / Fail Criteria</h4>
+                                <ul id="gateCriteria">
+                                    <li>Compilation succeeds with 0 errors</li>
+                                    <li>All local tests pass</li>
+                                </ul>
+                            </div>
+                            <div class="inspector-col">
+                                <h4>Execution Cost</h4>
+                                <ul id="gateCost">
+                                    <li>Execution time: &lt; 10 seconds</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Metrics & SLAs -->
+            <div class="section-container" id="sec-5">
+                <h2>Metrics & SLAs Dashboard</h2>
+                <p class="section-subtitle">Real-time mock indicator displaying current state vs. Target quality SLAs.</p>
+                
+                <div class="metrics-grid">
+                    <!-- Metric 1 -->
+                    <div class="metric-card">
+                        <div class="metric-title">Defect Leakage Rate</div>
+                        <div class="metric-value-container">
+                            <svg class="metric-svg" width="100" height="100">
+                                <circle class="metric-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="metric-progress" cx="50" cy="50" r="45" stroke="var(--color-success)" stroke-dasharray="282.7" stroke-dashoffset="18"></circle>
+                            </svg>
+                            <div class="metric-text">3.2%</div>
+                        </div>
+                        <div class="metric-sla">SLA Target: <strong>&lt; 5%</strong></div>
+                    </div>
+
+                    <!-- Metric 2 -->
+                    <div class="metric-card">
+                        <div class="metric-title">Escaped Critical Defects</div>
+                        <div class="metric-value-container">
+                            <svg class="metric-svg" width="100" height="100">
+                                <circle class="metric-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="metric-progress" cx="50" cy="50" r="45" stroke="var(--color-success)" stroke-dasharray="282.7" stroke-dashoffset="0"></circle>
+                            </svg>
+                            <div class="metric-text">0</div>
+                        </div>
+                        <div class="metric-sla">SLA Target: <strong>0 Tolerance</strong></div>
+                    </div>
+
+                    <!-- Metric 3 -->
+                    <div class="metric-card">
+                        <div class="metric-title">Flaky Test Index</div>
+                        <div class="metric-value-container">
+                            <svg class="metric-svg" width="100" height="100">
+                                <circle class="metric-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="metric-progress" cx="50" cy="50" r="45" stroke="var(--color-success)" stroke-dasharray="282.7" stroke-dashoffset="24"></circle>
+                            </svg>
+                            <div class="metric-text">0.4%</div>
+                        </div>
+                        <div class="metric-sla">SLA Target: <strong>&lt; 1%</strong></div>
+                    </div>
+
+                    <!-- Metric 4 -->
+                    <div class="metric-card">
+                        <div class="metric-title">CI Pipeline Lead Time</div>
+                        <div class="metric-value-container">
+                            <svg class="metric-svg" width="100" height="100">
+                                <circle class="metric-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="metric-progress" cx="50" cy="50" r="45" stroke="var(--color-success)" stroke-dasharray="282.7" stroke-dashoffset="56"></circle>
+                            </svg>
+                            <div class="metric-text">8.2m</div>
+                        </div>
+                        <div class="metric-sla">SLA Target: <strong>&lt; 10m PR</strong></div>
+                    </div>
+
+                    <!-- Metric 5 -->
+                    <div class="metric-card">
+                        <div class="metric-title">Critical Path Automation</div>
+                        <div class="metric-value-container">
+                            <svg class="metric-svg" width="100" height="100">
+                                <circle class="metric-bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="metric-progress" cx="50" cy="50" r="45" stroke="var(--color-success)" stroke-dasharray="282.7" stroke-dashoffset="12"></circle>
+                            </svg>
+                            <div class="metric-text">96%</div>
+                        </div>
+                        <div class="metric-sla">SLA Target: <strong>&gt; 95%</strong></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabId) {
+            document.querySelectorAll('.nav-link').forEach((link, idx) => {
+                if (idx + 1 === tabId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+
+            document.querySelectorAll('.section-container').forEach((sec, idx) => {
+                if (idx + 1 === tabId) {
+                    sec.classList.add('active');
+                } else {
+                    sec.classList.remove('active');
+                }
+            });
+        }
+
+        // Pyramid Layer Detail Display
+        const layerData = {
+            e2e: {
+                title: "End-to-End System Testing",
+                desc: "Verifies critical user interactions and transactions from the browser storefront UI to background ledger processes.",
+                ratio: "5%",
+                tooling: "Playwright / Node.js Runner",
+                phase: "Pre-Merge Release Candidates"
+            },
+            perf: {
+                title: "Performance & Stress Testing",
+                desc: "Simulates high-volume transaction loads to stress-test microservice bottlenecks, DB connections, and network latencies.",
+                ratio: "10%",
+                tooling: "k6 / Load Generator Integration",
+                phase: "Nightly Releases under traffic spikes"
+            },
+            integ: {
+                title: "Integration Testing",
+                desc: "Verifies state writes and cache persistence layers under simulated network bounds and database locking operations.",
+                ratio: "20%",
+                tooling: "Docker Compose / Go test",
+                phase: "PR Build & Pre-Merge Gates"
+            },
+            contract: {
+                title: "Contract & Schema Verification",
+                desc: "Validates protobuf interface integrity and consumer expectations across microservices, ensuring backwards compatibility.",
+                ratio: "25%",
+                tooling: "Buf CLI / Pact framework stubs",
+                phase: "PR Build Pipelines on change"
+            },
+            unit: {
+                title: "Unit & Component Testing",
+                desc: "Isolates pure business code rules (like tax percentages, ad selectors, or currency conversions) from external dependencies using stubs and mock frameworks.",
+                ratio: "40%",
+                tooling: "xUnit / GoMock / Moq / PyTest",
+                phase: "Local Developer commits & PR Builds"
+            }
+        };
+
+        function selectLayer(layerId) {
+            document.querySelectorAll('.pyramid-layer').forEach(layer => {
+                layer.classList.remove('active-layer');
+            });
+            
+            const target = document.querySelector(`.layer-${layerId}`);
+            if (target) target.classList.add('active-layer');
+
+            const info = layerData[layerId];
+            if (info) {
+                document.getElementById('layerTitle').innerText = info.title;
+                document.getElementById('layerDesc').innerText = info.desc;
+                document.getElementById('layerRatio').innerText = info.ratio;
+                document.getElementById('layerTooling').innerText = info.tooling;
+                document.getElementById('layerPhase').innerText = info.phase;
+            }
+        }
+
+        // Pipeline Quality Gates Inspector
+        const gateData = {
+            1: {
+                title: "Gate 1: Pre-Commit (Local Developer Environment)",
+                checks: ["Code formatting and linting (gofmt, eslint)", "Protobuf interface verification (buf lint)", "Fast-running unit tests execution"],
+                criteria: ["100% linter validation passing", "Buf scans run with 0 errors", "All unit checks succeed in < 10 seconds"],
+                cost: ["Execution Lead Time: < 10 seconds"]
+            },
+            2: {
+                title: "Gate 2: Pull Request (PR) Build Gate",
+                checks: ["Compilation of modified container files", "Full unit test suite execution", "gRPC Contract verification stubs (Pact)"],
+                criteria: ["100% of pipeline tests pass", "Modified code lines show > 80% coverage", "Zero contract breaking exceptions"],
+                cost: ["Execution Lead Time: < 10 minutes"]
+            },
+            3: {
+                title: "Gate 3: Pre-Merge to Main (Release Candidate)",
+                checks: ["Complete stack deploy in ephemeral Docker Compose", "Protobuf compatibility tests (buf breaking)", "Smoke user E2E flows (Playwright)", "Weaver telemetry schema matching check"],
+                criteria: ["Zero smoke test script exceptions", "Buf asserts zero backwards-compatibility errors", "100% compliance on weaver semantic tags"],
+                cost: ["Execution Lead Time: < 20 minutes"]
+            },
+            4: {
+                title: "Gate 4: Nightly / Pre-Production Releases",
+                checks: ["Deep regression E2E path validations", "High-concurrency load testing (k6)", "Dependency security scanning (OSV-Scanner)", "Trace propagation compliance matching"],
+                criteria: ["Zero regressions caught", "System handles targeted peak stress load", "Zero High/Critical security vulnerabilities found"],
+                cost: ["Execution Lead Time: ~ 1.5 hours"]
+            }
+        };
+
+        function selectGate(gateId) {
+            // Update pipeline buttons UI
+            document.querySelectorAll('.pipeline-step').forEach((step, idx) => {
+                step.className = 'pipeline-step';
+                if (idx + 1 < gateId) {
+                    step.classList.add('passed');
+                } else if (idx + 1 === gateId) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Adjust Connector progress line
+            const connector = document.getElementById('pipelineConnector');
+            const percent = ((gateId - 1) / 3) * 100;
+            connector.style.width = `${percent}%`;
+
+            const info = gateData[gateId];
+            if (info) {
+                document.getElementById('gateTitle').innerText = info.title;
+                
+                const checksList = document.getElementById('gateChecks');
+                checksList.innerHTML = '';
+                info.checks.forEach(c => {
+                    const li = document.createElement('li');
+                    li.innerText = c;
+                    checksList.appendChild(li);
+                });
+
+                const critList = document.getElementById('gateCriteria');
+                critList.innerHTML = '';
+                info.criteria.forEach(c => {
+                    const li = document.createElement('li');
+                    li.innerText = c;
+                    critList.appendChild(li);
+                });
+
+                const costList = document.getElementById('gateCost');
+                costList.innerHTML = '';
+                info.cost.forEach(c => {
+                    const li = document.createElement('li');
+                    li.innerText = c;
+                    costList.appendChild(li);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

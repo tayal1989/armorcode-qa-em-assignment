@@ -1,0 +1,83 @@
+S. No.,Type of testing,Module Name,Test Case Name,Precondition,Test Steps,Testdata,Expected Outcome,Priority,Remarks
+1,Resiliency/Contract,Checkout,Verify Checkout resilience and client response when payment.service times out during order orchestration,"1. checkout.service and payment.service are running and connected via gRPC.
+2. A network delay emulator is configured on payment.service to delay responses by 15 seconds.
+3. User has active items in their Cart.","a. Given the user has loaded their cart and initiated checkout
+b. When the user enters valid payment details and clicks ""Place Order""
+c. And the gRPC call from checkout.service to payment.service is delayed by 15s (exceeding the 3s timeout limit)
+d. Then the checkout.service should terminate the connection, mark the order as failed, and return a clean failure response to the client","cart_id: ""usr-77a9"", payment_payload: { card_number: ""4111222233334444"", cvv: ""123"", expiry: ""12/28"" }, grpc_timeout: ""3000ms"", network_delay: ""15000ms""","1. gRPC code: DEADLINE_EXCEEDED (code 4) returned by checkout.service.
+2. UI State: Storefront shows user-friendly error message (""Payment service is temporarily unavailable. Please try again later."") rather than crash/hang.
+3. Telemetry: OpenTelemetry spans for checkout.service and payment.service register error status (status.code = ERROR), and an exception event is recorded on the span with details about the timeout.",P0,"Quality Risk: If checkout.service lacks a proper circuit breaker or gRPC retry fallback/timeout limits, Go goroutines will hang under load, depleting the web server's connection pool and causing cascading failures across other services."
+2,Resiliency/Contract,Checkout,Validate transaction rollback/compensation when shipping dispatch fails after payment completes,"1. payment.service is operational.
+2. shipping.service is configured to return a gRPC failure (e.g. INTERNAL error code) for new shipments.
+3. User cart contains items and valid payment card is used.","a. Given the checkout orchestration starts and successfully calls payment.service to charge the card
+b. When the subsequent gRPC call to shipping.service to dispatch items fails with gRPC error code 13 (INTERNAL)
+c. And checkout.service attempts to log order failure
+d. Then a compensating rollback request (refund) is issued to payment.service to reverse the transaction
+e. And the user is notified that the order could not be completed and no charges will be applied","cart_id: ""usr-88b2"", billing_amount: { units: 150, nanos: 0, currency: ""USD"" }, shippingservice_mock_response: ""gRPC INTERNAL (13)""","1. gRPC code: ABORTED (code 10) or INTERNAL (code 13) for PlaceOrder.
+2. Database state: User card transaction is refunded/reversed in payment gateway logs.
+3. UI State: Checkout fails with error ""Shipping dispatch failed; payment has been refunded.""
+4. Telemetry: Compensation transaction span (e.g. RefundPayment) is logged and linked to parent PlaceOrder trace with span link or parent context.",P0,Quality Risk: Microservices lack distributed transaction coordination (Saga pattern). Silent payment drops or un-refunded charges can occur if shipping fails post-authorization without explicit compensation logic.
+3,Security,Checkout,"Ensure payment credentials (card number, CVV) are not exported to OpenTelemetry span attributes","1. OpenTelemetry collector and Jaeger are running and capturing traces.
+2. Storefront app is configured to trace all checkout actions.","a. Given the user completes a checkout transaction with valid credit card credentials
+b. When the checkout.service executes the PlaceOrder request
+c. And telemetry spans are exported to the OpenTelemetry Collector
+d. Then the exported spans must not contain raw credit card number or CVV in attributes (such as demo.payment.card_number or demo.payment.card_cvv)
+e. And any exported payment attributes must be masked or completely redacted","payment_details: { card_number: ""4111222233334444"", cvv: ""999"", expiration_year: 2028 }, otel_span_filter: ""checkoutservice.PlaceOrder""","1. Span verification: In Jaeger UI or Otel Collector exporter output, the attributes demo.payment.card_number and demo.payment.card_cvv are absent or display value ""REDACTED"" or masked as ""************4444"".
+2. PCI Compliance: Zero plaintext financial info leaked in logs or traces.",P0,Quality Risk: Go checkout.service writes sensitive payment details directly to OpenTelemetry span attributes. This violates PCI-DSS requirements and exposes plaintext financial data to log/trace backends.
+4,Functional,Payment,Verify financial transaction accuracy and prevent rounding issues during multi-currency conversions,"1. currencyservice (C++) has conversion rates loaded.
+2. Cart total is calculated in USD and user requests checkout in a localized currency (e.g., EUR or JPY) requiring fraction calculations.","a. Given the cart total is $99.99 USD
+b. When the currency conversion request to EUR is processed via currency.service
+c. And the converted money struct (units and nanos) is sent to payment.service
+d. Then the payment.service must process the exact converted amount without floating point drift or loss of cents
+e. And the total charged matches the expected conversion rate exactly","amount: { units: 99, nanos: 990000000, currency_code: ""USD"" }, target_currency: ""EUR"", conversion_rate: 0.915234","1. Precision: Expected converted value in EUR is 91 units and 514247766 nanos. payment.service processes exactly EUR 91.51.
+2. HTTP/gRPC: OK response from payment.service.
+3. Telemetry: Conversion trace records the exact input rates and result units/nanos.",P1,"Quality Risk: Floating point representation in languages like Node.js or C++ conversions can lead to rounding underflows/overflows, charging users incorrect fractional amounts."
+5,Functional,Product Catalog,Verify transaction consistency when catalog pricing changes during an active checkout session,"1. An item is in the catalog with Price A ($10.00).
+2. User adds the item to their cart at Price A.","a. Given the user has the item in their cart showing $10.00
+b. When the administrator updates the price of the item to $15.00 in the PostgreSQL product catalog.service database
+c. And the user clicks ""Place Order""
+d. Then checkout.service checks the current catalog price during orchestration
+e. And checkout.service rejects the order or warns the user of the price drift (or processes checkout with a locked cart price depending on business logic)","product_id: ""OLJ98-Y18"", cart_price: 10.00, updated_db_price: 15.00","1. Expected UI State: System informs user: ""Pricing has changed. Your cart has been updated to $15.00. Please review before checkout.""
+2. Expected gRPC response: FAILED_PRECONDITION (code 9) if pricing mismatch check is enforced, or processed if cart price locking is active.
+3. Telemetry: An event trace is logged showing a price drift mismatch between cart addition time and checkout orchestration.",P1,"Quality Risk: Lack of a cart locking mechanism during checkout means users might see price A on the UI but be charged price B by the backend catalog query, triggering consumer disputes and compliance issues."
+6,Resiliency/Contract,Cart,Verify cart recovery and user experience when Valkey cache evicts cart sessions under memory pressure,"1. cartservice (C#) is configured to use Valkey (valkey-cart) with volatile LRU eviction policy.
+2. Active user cart session exists.","a. Given a user has added multiple items to their cart
+b. When the Valkey memory limit is reached and the active user's cart key is evicted
+c. And the user navigates back to their cart page or attempts to checkout
+d. Then the cart.service gracefully handles the missing key (e.g. returns empty cart or attempts to restore from database backup)
+e. And the storefront does not throw a 500 Internal Server Error","cart_id: ""usr-abc123xyz"", valkey_maxmemory_limit: ""10mb"", eviction_policy: ""volatile-lru""","1. API State: cart.service returns an empty cart struct (gRPC OK with empty list) or throws an appropriate NOT_FOUND error instead of crashing.
+2. UI State: Storefront displays ""Your cart is empty"" or a connection recovery message, rather than a blank screen or raw error traceback.
+3. Telemetry: Otel span captures Valkey cache miss and logs warning.",P2,Quality Risk: cart.service relies on Valkey as an ephemeral store without persistent database fallback. Evictions under load will cause silent cart wipes and poor customer conversion rate.
+7,Security,Payment,Identify fraud transaction processing gap due to asynchronous Kafka event ingestion delay,"1. payment.service publishes payment events to Kafka.
+2. fraud-detection.service (Java) consumes events asynchronously from Kafka.
+3. A test account matches fraudulent markers.","a. Given a user initiates checkout with payment credentials flagged as fraudulent
+b. When checkout.service processes and completes the payment via payment.service
+c. And the checkout completes, displaying the order confirmation to the user
+d. And the fraud event is subsequently published to Kafka and consumed by fraud-detection.service
+e. Then check the delay time between payment authorization and the fraud alert trigger","suspicious_card: ""4222222222222"", billing_address: ""High Risk Area"", kafka_ingestion_delay: ""5000ms""","1. System gap: The transaction completes successfully before the fraud flag is verified.
+2. Alert telemetry: fraud-detection publishes a high-priority alert event to Kafka, and OpenTelemetry spans record the latency gap between payment span end and fraud span start.",P1,"Quality Risk: Async fraud scanning allows fraudulent orders to clear checkout before they are flagged. If the dispatch system processes orders automatically, fraudulent physical goods could ship before detection."
+8,Functional,Cart,Prevent integer overflow or negative balances when adding excessively large item quantities to the cart,1. User is logged in and has a product page open.,"a. Given the user selects a product
+b. When the user inputs an extremely large quantity (e.g. 2,147,483,648 or -1) and clicks ""Add to Cart""
+c. And the cart.service processes the AddItem gRPC request
+d. Then the cart.service must reject the quantity input as invalid
+e. And the cart total price must not roll over, become negative, or result in zero cost","product_id: ""L98-Y18"", quantity: 2147483648, pricing_per_unit: 12.50","1. gRPC response: INVALID_ARGUMENT (code 3) from cart.service.
+2. UI State: Storefront shows error ""Invalid quantity selected."" and does not update cart.
+3. Telemetry: Span logs validation failure attribute (validation.status = REJECTED).",P0,"Quality Risk: Missing validation checks on numeric boundaries could cause integer overflows in cart calculations, allowing malicious users to buy goods for free or cause server-side crashes."
+9,Performance,Cart,Ensure cart consistency during rapid concurrent item additions/removals,"1. User session is established.
+2. Load-generation client is set up to fire parallel requests for the same cart ID.","a. Given a cart contains 2 items
+b. When two parallel requests are sent simultaneously (Request 1: Add 1 item; Request 2: Remove 1 item)
+c. And both requests are processed by the cartservice in Valkey concurrently
+d. Then the final cart state must consistently reflect the net modification (+1 and -1, resulting in exactly 2 items)
+e. And Valkey cache lock prevents corrupting or overwriting cart item counts","cart_id: ""usr-race-99"", concurrent_requests: 20, operation_mix: { add: 10, remove: 10 }","1. Final Cart State: Total item quantity remains mathematically consistent (e.g., net change = 0).
+2. HTTP/gRPC Response: All concurrent calls return OK (code 0) or handle conflict with retry.
+3. Telemetry: Traces show serialization of cache access, with no overlapping write errors.",P2,"Quality Risk: Concurrent updates to Valkey without distributed locks or atomic transaction commands can cause race conditions, resulting in missing or extra items in the user's cart."
+10,Performance,Checkout,Verify Checkout system behavior and product availability under bot-driven high-concurrency flash sale traffic (inventory reservation race condition),"1. Store has a hot promotional product with limited inventory (e.g., 5 items left).
+2. Multiple concurrent users (bots and normal users) have this item added to their carts.
+3. Rate limiting and API gateway request shielding are enabled.","a. Given a high-demand product has only 5 remaining items in stock
+b. When a flash sale starts and 50 concurrent automated checkout requests (bots) and 50 manual user checkout requests are submitted simultaneously
+c. And checkout.service attempts to reserve inventory in parallel
+d. Then the checkout.service must process exactly 5 successful checkouts and reject the remaining 95 requests with an out-of-stock warning
+e. And the system must prevent over-allocation (overselling) of inventory without throwing unhandled exceptions or lock timeouts
+","product_id: ""FLASH-DEAL-2026"", starting_inventory: 5, concurrent_checkout_requests: 100, ramp_up_period: ""0ms""","1. gRPC response: exactly 5 checkout requests return OK (code 0), and 95 return RESOURCE_EXHAUSTED (code 8) or FAILED_PRECONDITION (code 9) with message ""Item out of stock"".
+2. UI State: Storefront shows ""Out of Stock"" badge immediately after the 5th order completes, and pending checkouts receive a user-friendly stock exhaustion message.
+3. Telemetry: OpenTelemetry spans register database lock metrics, inventory check latency spikes remain below 200ms, and zero 500 errors are logged.",P0,"Quality Risk: Lack of atomic inventory checks and locking (e.g., SELECT FOR UPDATE or Redis-based distributed locks) leads to overselling, where more products are purchased than exist in stock, causing customer disappointment and order fulfillment failures."

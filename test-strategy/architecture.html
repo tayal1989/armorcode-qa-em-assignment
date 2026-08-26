@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenTelemetry Astronomy Shop - Microservices Architecture Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #060913;
+            --card-bg: rgba(13, 20, 38, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            
+            --color-frontend: #6366f1;
+            --color-go: #00add8;
+            --color-dotnet: #512bd4;
+            --color-node: #68a063;
+            --color-cpp: #00599c;
+            --color-java: #f89820;
+            --color-python: #3776ab;
+            --color-ruby: #cc342d;
+            --color-php: #777bb4;
+            --color-infra: #94a3b8;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(30, 27, 75, 0.3) 0, transparent 50%),
+                radial-gradient(at 50% 0%, rgba(15, 23, 42, 0.5) 0, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(67, 56, 202, 0.15) 0, transparent 50%);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+            background: rgba(6, 9, 19, 0.7);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 2rem;
+            height: 2rem;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #060913;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            background: linear-gradient(to right, #f8fafc, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sub-logo {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.15rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.45);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            flex-grow: 1;
+            height: calc(100vh - 73px);
+            position: relative;
+        }
+
+        .canvas-container {
+            position: relative;
+            overflow: auto;
+            background: radial-gradient(circle at center, rgba(17, 24, 39, 0.2) 0%, transparent 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .architecture-svg {
+            z-index: 10;
+            width: 1100px;
+            height: 700px;
+        }
+
+        /* Side Panel Styling */
+        .side-panel {
+            background: rgba(8, 12, 24, 0.85);
+            border-left: 1px solid var(--border-color);
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            backdrop-filter: blur(20px);
+            z-index: 20;
+        }
+
+        .panel-section {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.25rem;
+        }
+
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+
+        .panel-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .service-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .meta-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.04);
+        }
+
+        .meta-label {
+            color: var(--text-secondary);
+        }
+
+        .meta-value {
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        /* Risk Cards */
+        .risk-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .risk-critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .risk-high {
+            background: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .risk-medium {
+            background: rgba(234, 179, 8, 0.15);
+            color: #facc15;
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .risk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .risk-item {
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .risk-item strong {
+            color: #f87171;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Interactive Map SVG nodes styling */
+        .node {
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .node rect {
+            fill: #0b0f19;
+            stroke-width: 1.5;
+            rx: 8;
+            ry: 8;
+            transition: all 0.3s ease;
+        }
+
+        .node:hover rect {
+            stroke-width: 2.5;
+            filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+            transform: translateY(-2px);
+        }
+
+        .node.selected rect {
+            stroke-width: 3;
+            stroke: #818cf8 !important;
+            filter: drop-shadow(0 0 12px rgba(129, 140, 248, 0.6)) !important;
+        }
+
+        .node text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            fill: #cbd5e1;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .node-tech {
+            font-size: 8px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+        }
+
+        .group-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            fill: #475569;
+            letter-spacing: 0.1em;
+        }
+
+        .group-boundary {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.025);
+            stroke-dasharray: 4 4;
+            rx: 12;
+            ry: 12;
+        }
+
+        /* Connecting Lines */
+        .connection {
+            fill: none;
+            stroke-linecap: round;
+            transition: all 0.3s ease;
+        }
+
+        .connection.grpc {
+            stroke: rgba(0, 173, 216, 0.25);
+            stroke-width: 1.5;
+        }
+
+        .connection.http {
+            stroke: rgba(99, 102, 241, 0.25);
+            stroke-width: 1.5;
+        }
+
+        .connection.kafka {
+            stroke: rgba(248, 152, 32, 0.25);
+            stroke-width: 1.5;
+            stroke-dasharray: 4 4;
+        }
+
+        .connection.db {
+            stroke: rgba(148, 163, 184, 0.2);
+            stroke-width: 1.5;
+        }
+
+        /* Active animations for checkout flow simulator */
+        @keyframes pulse-flow {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .connection.active-flow {
+            stroke-width: 3;
+            stroke-dasharray: 6 4;
+            animation: pulse-flow 0.5s linear infinite;
+        }
+
+        .connection.active-flow.grpc {
+            stroke: #00add8;
+        }
+
+        .connection.active-flow.http {
+            stroke: #818cf8;
+        }
+
+        .connection.active-flow.kafka {
+            stroke: #f89820;
+        }
+
+        .node.active-flow-node rect {
+            fill: rgba(79, 70, 229, 0.3) !important;
+            stroke: #fbbf24 !important;
+            stroke-width: 3 !important;
+            filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.8)) !important;
+        }
+
+        /* Info steps overlay */
+        .sim-steps-overlay {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(8, 12, 24, 0.9);
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            width: 500px;
+            backdrop-filter: blur(16px);
+            z-index: 50;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .sim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .sim-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+
+        .sim-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .sim-content {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-primary);
+        }
+
+        .sim-controls-panel {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">🪐</div>
+            <div>
+                <h1>ASTRONOMY SHOP</h1>
+                <div class="sub-logo">OpenTelemetry Demo Architecture</div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn btn-secondary" onclick="resetView()">Reset Selection</button>
+            <button class="btn" id="simulateBtn" onclick="toggleCheckoutSimulation()">🚀 Simulate Checkout Flow</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Interactive Diagram Canvas -->
+        <div class="canvas-container">
+            <div class="grid-bg"></div>
+            
+            <svg class="architecture-svg" viewBox="0 0 1100 700">
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255, 255, 255, 0.25)" />
+                    </marker>
+                    <marker id="arrow-active" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24" />
+                    </marker>
+                </defs>
+
+                <!-- Layer Boundaries & Group Annotations -->
+                <!-- Client/Ingress Layer -->
+                <rect class="group-boundary" x="10" y="20" width="130" height="660" />
+                <text class="group-label" x="20" y="35">Ingress & Proxy</text>
+
+                <!-- UI/Frontend Layer -->
+                <rect class="group-boundary" x="160" y="20" width="130" height="660" />
+                <text class="group-label" x="170" y="35">Presentation</text>
+
+                <!-- Orchestrator Layer -->
+                <rect class="group-boundary" x="310" y="20" width="140" height="660" />
+                <text class="group-label" x="320" y="35">Orchestration</text>
+
+                <!-- Microservices Core Layer -->
+                <rect class="group-boundary" x="470" y="20" width="370" height="660" />
+                <text class="group-label" x="480" y="35">Domain Services</text>
+
+                <!-- Database/Cache & Eventing Layer -->
+                <rect class="group-boundary" x="860" y="20" width="230" height="660" />
+                <text class="group-label" x="870" y="35">Infrastructure & Eventing</text>
+
+                <!-- CONNECTIONS (Static Lines) -->
+                <!-- Front-proxy -> Frontend -->
+                <path id="conn-proxy-front" class="connection http" d="M 120 180 L 180 180" marker-end="url(#arrow)" />
+                <!-- LoadGen -> Proxy -->
+                <path id="conn-load-proxy" class="connection http" d="M 120 70 L 60 110 L 60 140" marker-end="url(#arrow)" />
+                <!-- Frontend -> Product Catalog -->
+                <path id="conn-front-catalog" class="connection grpc" d="M 290 180 L 350 140 L 490 70" marker-end="url(#arrow)" />
+                <!-- Frontend -> Cart -->
+                <path id="conn-front-cart" class="connection grpc" d="M 290 180 L 490 180" marker-end="url(#arrow)" />
+                <!-- Frontend -> Recommendation -->
+                <path id="conn-front-reco" class="connection grpc" d="M 290 180 L 380 230 L 490 490" marker-end="url(#arrow)" />
+                <!-- Frontend -> Ad -->
+                <path id="conn-front-ad" class="connection grpc" d="M 290 180 L 340 280 L 490 560" marker-end="url(#arrow)" />
+                <!-- Frontend -> Checkout -->
+                <path id="conn-front-check" class="connection grpc" d="M 250 210 L 250 350 L 320 350" marker-end="url(#arrow)" />
+
+                <!-- Checkout -> Cart (Get/Empty) -->
+                <path id="conn-check-cart" class="connection grpc" d="M 390 320 L 390 200 L 490 200" marker-end="url(#arrow)" />
+                <!-- Checkout -> Product Catalog -->
+                <path id="conn-check-catalog" class="connection grpc" d="M 390 320 L 400 90 L 490 90" marker-end="url(#arrow)" />
+                <!-- Checkout -> Currency -->
+                <path id="conn-check-curr" class="connection grpc" d="M 450 350 L 490 290" marker-end="url(#arrow)" />
+                <!-- Checkout -> Shipping -->
+                <path id="conn-check-ship" class="connection grpc" d="M 450 350 L 490 350" marker-end="url(#arrow)" />
+                <!-- Checkout -> Payment -->
+                <path id="conn-check-pay" class="connection grpc" d="M 450 350 L 490 410" marker-end="url(#arrow)" />
+                <!-- Checkout -> Email -->
+                <path id="conn-check-email" class="connection grpc" d="M 390 380 L 390 620 L 490 620" marker-end="url(#arrow)" />
+
+                <!-- Shipping -> Quote -->
+                <path id="conn-ship-quote" class="connection grpc" d="M 610 350 L 670 350" marker-end="url(#arrow)" />
+                <!-- Recommendation -> Product Catalog -->
+                <path id="conn-reco-catalog" class="connection grpc" d="M 610 490 L 640 490 L 640 100 L 610 100" marker-end="url(#arrow)" />
+
+                <!-- Cart -> Valkey -->
+                <path id="conn-cart-valkey" class="connection db" d="M 610 180 L 880 180" marker-end="url(#arrow)" />
+                <!-- Product Catalog -> PG Db -->
+                <path id="conn-catalog-db" class="connection db" d="M 610 80 L 880 80" marker-end="url(#arrow)" />
+
+                <!-- Checkout -> Kafka -->
+                <path id="conn-check-kafka" class="connection kafka" d="M 420 380 L 420 440 L 760 440 L 760 300 L 880 300" marker-end="url(#arrow)" />
+                <!-- Kafka -> Accounting -->
+                <path id="conn-kafka-acct" class="connection kafka" d="M 1000 300 L 1020 300 L 1020 460 L 980 460" marker-end="url(#arrow)" />
+                <!-- Kafka -> Fraud Detection -->
+                <path id="conn-kafka-fraud" class="connection kafka" d="M 1000 300 L 1040 300 L 1040 560 L 980 560" marker-end="url(#arrow)" />
+
+                <!-- Accounting -> PG Db -->
+                <path id="conn-acct-db" class="connection db" d="M 930 430 L 930 110" marker-end="url(#arrow)" />
+
+                <!-- NODES (Service Blocks) -->
+                <!-- Front-proxy (Envoy) -->
+                <g id="node-proxy" class="node" onclick="selectService('proxy')">
+                    <rect x="20" y="140" width="100" height="70" stroke="#6366f1" />
+                    <text x="35" y="172">front-proxy</text>
+                    <text class="node-tech" x="35" y="190" fill="#6366f1">Envoy Proxy</text>
+                </g>
+
+                <!-- Load Generator -->
+                <g id="node-loadgen" class="node" onclick="selectService('loadgen')">
+                    <rect x="20" y="50" width="100" height="50" stroke="#94a3b8" />
+                    <text x="28" y="75">load-generator</text>
+                    <text class="node-tech" x="28" y="88" fill="#94a3b8">Python / k6</text>
+                </g>
+
+                <!-- Frontend (Next.js) -->
+                <g id="node-frontend" class="node" onclick="selectService('frontend')">
+                    <rect x="180" y="140" width="100" height="70" stroke="#6366f1" />
+                    <text x="202" y="172">frontend</text>
+                    <text class="node-tech" x="202" y="190" fill="#6366f1">Next.js TS</text>
+                </g>
+
+                <!-- Product Catalog (Go) -->
+                <g id="node-catalog" class="node" onclick="selectService('catalog')">
+                    <rect x="490" y="50" width="120" height="60" stroke="#00add8" />
+                    <text x="502" y="80">product-catalog</text>
+                    <text class="node-tech" x="502" y="95" fill="#00add8">Go (Golang)</text>
+                </g>
+
+                <!-- Cart Service (C#) -->
+                <g id="node-cart" class="node" onclick="selectService('cart')">
+                    <rect x="490" y="150" width="120" height="60" stroke="#512bd4" />
+                    <text x="522" y="180">cartservice</text>
+                    <text class="node-tech" x="522" y="195" fill="#512bd4">C# / .NET</text>
+                </g>
+
+                <!-- Currency Service (C++) -->
+                <g id="node-currency" class="node" onclick="selectService('currency')">
+                    <rect x="490" y="260" width="120" height="60" stroke="#00599c" />
+                    <text x="515" y="290">currencyservice</text>
+                    <text class="node-tech" x="515" y="305" fill="#00599c">C++ 20</text>
+                </g>
+
+                <!-- Shipping Service (Go) -->
+                <g id="node-shipping" class="node" onclick="selectService('shipping')">
+                    <rect x="490" y="320" width="120" height="60" stroke="#00add8" />
+                    <text x="515" y="350">shippingservice</text>
+                    <text class="node-tech" x="515" y="365" fill="#00add8">Go (Golang)</text>
+                </g>
+
+                <!-- Quote Service (PHP) -->
+                <g id="node-quote" class="node" onclick="selectService('quote')">
+                    <rect x="670" y="320" width="120" height="60" stroke="#777bb4" />
+                    <text x="698" y="350">quoteservice</text>
+                    <text class="node-tech" x="698" y="365" fill="#777bb4">PHP 8</text>
+                </g>
+
+                <!-- Payment Service (Node.js) -->
+                <g id="node-payment" class="node" onclick="selectService('payment')">
+                    <rect x="490" y="380" width="120" height="60" stroke="#68a063" />
+                    <text x="515" y="410">paymentservice</text>
+                    <text class="node-tech" x="515" y="425" fill="#68a063">NodeJS / JS</text>
+                </g>
+
+                <!-- Recommendation Service (Python) -->
+                <g id="node-recommendation" class="node" onclick="selectService('recommendation')">
+                    <rect x="490" y="460" width="120" height="60" stroke="#3776ab" />
+                    <text x="502" y="490">recommendation</text>
+                    <text class="node-tech" x="502" y="505" fill="#3776ab">Python 3</text>
+                </g>
+
+                <!-- Ad Service (Java) -->
+                <g id="node-ad" class="node" onclick="selectService('ad')">
+                    <rect x="490" y="530" width="120" height="60" stroke="#f89820" />
+                    <text x="525" y="560">adservice</text>
+                    <text class="node-tech" x="525" y="575" fill="#f89820">Java (JVM)</text>
+                </g>
+
+                <!-- Email Service (Ruby) -->
+                <g id="node-email" class="node" onclick="selectService('email')">
+                    <rect x="490" y="600" width="120" height="60" stroke="#cc342d" />
+                    <text x="522" y="630">emailservice</text>
+                    <text class="node-tech" x="522" y="645" fill="#cc342d">Ruby 3</text>
+                </g>
+
+                <!-- Checkout Service (Go - Central Orchestrator) -->
+                <g id="node-checkout" class="node" onclick="selectService('checkout')">
+                    <rect x="320" y="320" width="120" height="60" stroke="#00add8" />
+                    <text x="338" y="350">checkoutservice</text>
+                    <text class="node-tech" x="338" y="365" fill="#00add8">Go (Golang)</text>
+                </g>
+
+                <!-- Postgres Database -->
+                <g id="node-postgres" class="node" onclick="selectService('postgres')">
+                    <rect x="880" y="50" width="120" height="60" stroke="#94a3b8" />
+                    <text x="898" y="80">astronomy-db</text>
+                    <text class="node-tech" x="898" y="95" fill="#94a3b8">PostgreSQL</text>
+                </g>
+
+                <!-- Valkey Cart Cache -->
+                <g id="node-valkey" class="node" onclick="selectService('valkey')">
+                    <rect x="880" y="150" width="120" height="60" stroke="#94a3b8" />
+                    <text x="906" y="180">valkey-cart</text>
+                    <text class="node-tech" x="906" y="195" fill="#94a3b8">Redis Cache</text>
+                </g>
+
+                <!-- Kafka Message Queue -->
+                <g id="node-kafka" class="node" onclick="selectService('kafka')">
+                    <rect x="880" y="270" width="120" height="60" stroke="#f89820" />
+                    <text x="925" y="300">kafka</text>
+                    <text class="node-tech" x="925" y="315" fill="#f89820">Java Event Queue</text>
+                </g>
+
+                <!-- Accounting Service (.NET Kafka consumer) -->
+                <g id="node-accounting" class="node" onclick="selectService('accounting')">
+                    <rect x="860" y="430" width="120" height="60" stroke="#512bd4" />
+                    <text x="878" y="460">accountingservice</text>
+                    <text class="node-tech" x="878" y="475" fill="#512bd4">C# / .NET</text>
+                </g>
+
+                <!-- Fraud Detection Service (Java Kafka consumer) -->
+                <g id="node-fraud" class="node" onclick="selectService('fraud')">
+                    <rect x="860" y="530" width="120" height="60" stroke="#f89820" />
+                    <text x="874" y="560">fraud-detection</text>
+                    <text class="node-tech" x="874" y="575" fill="#f89820">Java (JVM)</text>
+                </g>
+            </svg>
+
+            <!-- Simulator Info Banner overlay -->
+            <div class="sim-steps-overlay" id="simOverlay">
+                <div class="sim-header">
+                    <span class="sim-title" id="simTitle">Step 1: Front Request Ingestion</span>
+                    <button class="sim-close" onclick="stopCheckoutSimulation()">✕</button>
+                </div>
+                <div class="sim-content" id="simDesc">
+                    The client requests a checkout action which enters the frontend through the Envoy-based Front Proxy...
+                </div>
+                <div class="sim-controls-panel">
+                    <button class="btn btn-secondary" id="simPrev" onclick="prevSimStep()">Previous</button>
+                    <button class="btn" id="simNext" onclick="nextSimStep()">Next Step</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Information Sidebar -->
+        <div class="side-panel">
+            <div class="panel-section" style="border-bottom: none; padding-bottom: 0;">
+                <div id="serviceHeader">
+                    <h2 class="panel-title" id="sidebarTitle">Select a Microservice</h2>
+                    <span class="tech-tag" id="sidebarTech" style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">Interactive Map</span>
+                </div>
+                <p class="service-desc" id="sidebarDesc" style="margin-top: 1rem;">
+                    Click on any service card in the architecture map on the left to examine its parameters, technology stack, directory paths, communication links, and associated risk analysis.
+                </p>
+            </div>
+
+            <!-- Meta details (Dynamic) -->
+            <div class="panel-section" id="metaSection" style="display:none;">
+                <h3 class="panel-title" style="font-size: 0.9rem; color: var(--text-secondary);">Service Specifications</h3>
+                <div class="meta-list">
+                    <div class="meta-item">
+                        <span class="meta-label">Path</span>
+                        <span class="meta-value" id="metaPath">src/checkout</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Port</span>
+                        <span class="meta-value" id="metaPort">5050 (gRPC)</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Criticality</span>
+                        <span class="meta-value" id="metaCrit">Critical</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">DB/Cache</span>
+                        <span class="meta-value" id="metaDb">None</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk analysis section (Dynamic) -->
+            <div class="panel-section" id="riskSection" style="display:none;">
+                <h3 class="panel-title" style="font-size: 0.9rem; color: var(--text-secondary);">Quality Risk Profiles</h3>
+                <div class="risk-badge risk-critical" id="riskBadge">Critical Risk</div>
+                <div class="risk-list" id="riskList">
+                    <div class="risk-item">
+                        <strong>Cascading Timeouts</strong>
+                        Synchronous chain of gRPC calls can lock connection pools if downstreams stall.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const servicesData = {
+            proxy: {
+                title: "Frontend Proxy (Envoy)",
+                tech: "Envoy Proxy",
+                techColor: "var(--color-frontend)",
+                desc: "An Envoy-based network proxy routing traffic from clients to internal web storefront (HTTP) and administration interfaces (Jaeger, Grafana). Highly critical interface acting as the API gateway.",
+                path: "src/frontend-proxy",
+                port: "8080 (Envoy), 8001 (Admin)",
+                criticality: "Critical",
+                db: "None",
+                risk: "high",
+                risks: [
+                    { title: "Single Point of Failure", desc: "If Envoy crashes, the entire public storefront is unreachable." },
+                    { title: "gRPC Routing Latency", desc: "Performs HTTP-to-gRPC bridging; configuration errors can delay payloads." }
+                ]
+            },
+            loadgen: {
+                title: "Load Generator",
+                tech: "Locust / k6",
+                techColor: "var(--color-infra)",
+                desc: "A script-driven synthetic traffic generator that emulates user behaviors (browsing products, adding to cart, completing checkout) to generate telemetry data for demonstrating OpenTelemetry dashboards.",
+                path: "src/load-generator",
+                port: "N/A",
+                criticality: "Low",
+                db: "None",
+                risk: "medium",
+                risks: [
+                    { title: "Synthetic Telemetry Skew", desc: "If the generator behaviors skew from real user flows, tracing and logs will misrepresent actual user patterns." }
+                ]
+            },
+            frontend: {
+                title: "Frontend (Next.js)",
+                tech: "Next.js / TypeScript",
+                techColor: "var(--color-frontend)",
+                desc: "Serves client-side HTML, CSS, and interactive code. Communicates via gRPC client calls with product catalogs, carts, recommendations, and checkout.",
+                path: "src/frontend",
+                port: "8080 (internal)",
+                criticality: "Critical",
+                db: "None",
+                risk: "high",
+                risks: [
+                    { title: "Browser Tracing Leaks", desc: "Injects OTEL tracer agent on clients. If sensitive parameters are cached, cookies or tokens may leak to logs." },
+                    { title: "Node Thread Blocking", desc: "JavaScript single-threaded event loop can choke under heavy, un-cached catalog queries." }
+                ]
+            },
+            checkout: {
+                title: "Checkout Service (Go)",
+                tech: "Go (Golang)",
+                techColor: "var(--color-go)",
+                desc: "Central orchestrator of order completion. Performs a complex, blocking synchronous chain of gRPC calls. Coordinates Cart, Product Catalog, Currency, Shipping, Payment, and Email. Emits event records to Kafka.",
+                path: "src/checkout",
+                port: "5090 (gRPC)",
+                criticality: "Critical",
+                db: "None",
+                risk: "critical",
+                risks: [
+                    { title: "Cascading Timeouts", desc: "A synchronous gRPC call chain containing 6 services. A latency spike in Payments or Currencies will halt checkout and block execution threads." },
+                    { title: "Transactional State Inconsistencies", desc: "No Saga/2PC framework is configured. If shipping fails after payments succeed, the client's credit card is charged, but order status is marked as failed." },
+                    { title: "Compliance Leakage", desc: "Line 312 logs credit card details into trace attributes. This breaches PCI-DSS rules and exports plaintext bank cards to Grafana/Jaeger." }
+                ]
+            },
+            catalog: {
+                title: "Product Catalog",
+                tech: "Go (Golang)",
+                techColor: "var(--color-go)",
+                desc: "Acts as the single source of truth for astronomy telescopes and items. Performs database reads on PostgreSQL and exposes simple interfaces for browsing and search.",
+                path: "src/product-catalog",
+                port: "3550 (gRPC)",
+                criticality: "High",
+                db: "PostgreSQL (astronomy-db)",
+                risk: "high",
+                risks: [
+                    { title: "Connection Pool Exhaustion", desc: "Heavy searching or catalog queries directly execute SQL. Without caching, a sudden spike in users can exhaust DB pools." },
+                    { title: "Pricing Inconsistency", desc: "Price changes made to products during checkout are computed on-the-fly, creating potential discrepancies from cart display prices." }
+                ]
+            },
+            cart: {
+                title: "Cart Service",
+                tech: "C# / .NET Core",
+                techColor: "var(--color-dotnet)",
+                desc: "Maintains temporary shopping carts for active users. Connects directly to Valkey in-memory storage for high-speed read/write access.",
+                path: "src/cart",
+                port: "7070 (gRPC)",
+                criticality: "High",
+                db: "Valkey Cart Cache",
+                risk: "medium",
+                risks: [
+                    { title: "Valkey In-Memory Crashing", desc: "Valkey is volatile. If it crashes or runs out of memory, all active shopping carts are lost, blocking purchases." }
+                ]
+            },
+            currency: {
+                title: "Currency Service",
+                tech: "C++ 20",
+                techColor: "var(--color-cpp)",
+                desc: "Calculates exchange values from USD base prices to user currencies. High performance, stateless calculation engine written in C++.",
+                path: "src/currency",
+                port: "5111 (gRPC)",
+                criticality: "High",
+                db: "None",
+                risk: "medium",
+                risks: [
+                    { title: "Numerical Precision / Underflow", desc: "C++ float operations require accurate rounding limits. Underflow/rounding mismatches can charge decimal deviations in Checkout." }
+                ]
+            },
+            shipping: {
+                title: "Shipping Service",
+                tech: "Go (Golang)",
+                techColor: "var(--color-go)",
+                desc: "Coordinates parcel packing logic and requests quotes from the PHP Quote service. Generates shipping tracking IDs.",
+                path: "src/shipping",
+                port: "50051 (gRPC)",
+                criticality: "High",
+                db: "None",
+                risk: "medium",
+                risks: [
+                    { title: "Dependency Stalls", desc: "Relies heavily on the quoteservice (PHP). If quoteservice throws 500 errors or times out, checkout fails." }
+                ]
+            },
+            quote: {
+                title: "Quote Service",
+                tech: "PHP 8",
+                techColor: "var(--color-php)",
+                desc: "Stateless calculation engine. Determines shipping prices by calculating geographic weights and shipping volume.",
+                path: "src/quote",
+                port: "8090 (gRPC)",
+                criticality: "Low",
+                db: "None",
+                risk: "medium",
+                risks: [
+                    { title: "PHP Runtime Bottlenecks", desc: "Single execution pipeline per request; high volumes can lead to queued shipping calls." }
+                ]
+            },
+            payment: {
+                title: "Payment Service",
+                tech: "Node.js / JS",
+                techColor: "var(--color-node)",
+                desc: "Charges credit cards for order totals. Communicates mock success transactions. Crucial financial transaction boundary.",
+                path: "src/payment",
+                port: "50052 (gRPC)",
+                criticality: "Critical",
+                db: "None",
+                risk: "critical",
+                risks: [
+                    { title: "Credit Card Leakage", desc: "Accepts raw CreditCardInfo schema from checkout. Susceptible to SQL injections/log leaks if data isn't sanitized/masked." },
+                    { title: "No Rollback Logic", desc: "Charges card immediately. If later phases fail, payment service does not auto-refund without manual customer support intervention." }
+                ]
+            },
+            recommendation: {
+                title: "Recommendation Service",
+                tech: "Python 3",
+                techColor: "var(--color-python)",
+                desc: "Runs light heuristic scripts using catalog listings to offer recommended items at checkout or storefront browsing.",
+                path: "src/recommendation",
+                port: "8085 (gRPC)",
+                criticality: "Medium",
+                db: "Product Catalog",
+                risk: "medium",
+                risks: [
+                    { title: "Python Thread-blocking", desc: "GIL locks can limit concurrent request handling. If recommendation stalls, frontend loading times double." }
+                ]
+            },
+            ad: {
+                title: "Ad Service",
+                tech: "Java (JVM)",
+                techColor: "var(--color-java)",
+                desc: "Finds matching promotional banners based on keywords extracted from browse paths.",
+                path: "src/ad",
+                port: "9555 (gRPC)",
+                criticality: "Medium",
+                db: "None",
+                risk: "medium",
+                risks: [
+                    { title: "JVM Heap Thrashing", desc: "Memory overhead for simple banner matching is high, causing garbage collection spikes." }
+                ]
+            },
+            email: {
+                title: "Email Service",
+                tech: "Ruby 3",
+                techColor: "var(--color-ruby)",
+                desc: "Generates HTML order emails. Non-blocking checkout call.",
+                path: "src/email",
+                port: "8082 (gRPC)",
+                criticality: "Medium",
+                db: "None",
+                risk: "medium",
+                risks: [
+                    { title: "Outbox Failure", desc: "Mock mailer has no persistent queue. If email fails, the customer receives no confirmation." }
+                ]
+            },
+            postgres: {
+                title: "PostgreSQL (astronomy-db)",
+                tech: "PostgreSQL",
+                techColor: "var(--color-infra)",
+                desc: "Core database holding products, stock records, and transaction logs updated by Accounting.",
+                path: "src/postgresql",
+                port: "5432",
+                criticality: "High",
+                db: "N/A",
+                risk: "high",
+                risks: [
+                    { title: "No Replica Fallbacks", desc: "Single DB container. If db locks up, search and catalog fail immediately." }
+                ]
+            },
+            valkey: {
+                title: "Valkey Cart Cache",
+                tech: "Valkey (Redis)",
+                techColor: "var(--color-infra)",
+                desc: "Ultra-fast, in-memory key-value cache hosting active cart list items.",
+                path: "docker-compose",
+                port: "6379",
+                criticality: "High",
+                db: "N/A",
+                risk: "medium",
+                risks: [
+                    { title: "Volatile Memory", desc: "No permanent disk snapshots, memory pressure drops items." }
+                ]
+            },
+            kafka: {
+                title: "Kafka Event Queue",
+                tech: "Java / Kafka",
+                techColor: "var(--color-java)",
+                desc: "Asynchronous publisher topic for completed checkouts. Handled by Checkout and read by Accounting/Fraud.",
+                path: "src/kafka",
+                port: "9092",
+                criticality: "High",
+                db: "N/A",
+                risk: "high",
+                risks: [
+                    { title: "Message Loss", desc: "If broker connection fails before ACK, post-checkout tracking is completely lost." }
+                ]
+            },
+            accounting: {
+                title: "Accounting Service",
+                tech: "C# / .NET Core",
+                techColor: "var(--color-dotnet)",
+                desc: "Asynchronous Kafka consumer. Triggers calculations on orders and saves invoice tables to Postgres.",
+                path: "src/accounting",
+                port: "N/A (Consumer)",
+                criticality: "Medium",
+                db: "PostgreSQL (astronomy-db)",
+                risk: "medium",
+                risks: [
+                    { title: "Database Write Locks", desc: "Bulk inserts on postgres tables can lock checkout recording runs." }
+                ]
+            },
+            fraud: {
+                title: "Fraud Detection",
+                tech: "Java (JVM)",
+                techColor: "var(--color-java)",
+                desc: "Checks details of Kafka checkout events. Triggers mock warning status flags for anomalous transaction details.",
+                path: "src/fraud-detection",
+                port: "N/A (Consumer)",
+                criticality: "Medium",
+                db: "None",
+                risk: "high",
+                risks: [
+                    { title: "Asynchronous Fraud Loop", desc: "Runs POST-checkout. Payments are processed BEFORE fraud checks, meaning fraudsters can check out instantly, incurring high business chargebacks." }
+                ]
+            }
+        };
+
+        let activeSimInterval = null;
+        let currentStep = 0;
+        let isSimulating = false;
+
+        const simulationSteps = [
+            {
+                title: "Step 1: User Request Ingress",
+                desc: "Synthetic users (via Load Generator) or real clients send requests to the Envoy-based Front Proxy on port 8080. Envoy routes the web traffic directly to the Next.js Frontend.",
+                highlightNodes: ["node-loadgen", "node-proxy", "node-frontend"],
+                highlightConns: ["conn-load-proxy", "conn-proxy-front"]
+            },
+            {
+                title: "Step 2: Storefront Render Loop",
+                desc: "The Frontend service executes concurrent gRPC queries down to Product Catalog (to render items), Cart (to fetch current item counts), and Recommendation (to render suggested items). Cart accesses Valkey cache, Catalog reads PostgreSQL.",
+                highlightNodes: ["node-frontend", "node-catalog", "node-cart", "node-recommendation", "node-postgres", "node-valkey"],
+                highlightConns: ["conn-front-catalog", "conn-front-cart", "conn-front-reco", "conn-cart-valkey", "conn-catalog-db"]
+            },
+            {
+                title: "Step 3: Cart Checkout Triggered",
+                desc: "The user submits a Checkout form. Next.js Frontend initiates a gRPC call to Checkout Service (`PlaceOrderRequest`) containing card parameters, address, and email.",
+                highlightNodes: ["node-frontend", "node-checkout"],
+                highlightConns: ["conn-front-check"]
+            },
+            {
+                title: "Step 4: Checkout Synchronous Orchestration (Cart & Catalog)",
+                desc: "Checkout Service begins its synchronous blocking pipeline: It queries Cart Service to fetch the user's items, and then loops over the items, fetching product descriptions and base prices from the Product Catalog.",
+                highlightNodes: ["node-checkout", "node-cart", "node-catalog"],
+                highlightConns: ["conn-check-cart", "conn-check-catalog"]
+            },
+            {
+                title: "Step 5: Checkout currency math & Localisation",
+                desc: "To present localized pricing, Checkout Service calls Currency Service (C++) to convert the telescope base price (USD) to the user's localized currency.",
+                highlightNodes: ["node-checkout", "node-currency"],
+                highlightConns: ["conn-check-curr"]
+            },
+            {
+                title: "Step 6: Shipping Quote Inquiries",
+                desc: "Checkout Service calls Shipping Service (Go) to request shipping options, which calls Quote Service (PHP) to compute weight/volume distance costs.",
+                highlightNodes: ["node-checkout", "node-shipping", "node-quote"],
+                highlightConns: ["conn-check-ship", "conn-ship-quote"]
+            },
+            {
+                title: "Step 7: Payment Card Authorized & Charged",
+                desc: "Checkout sums up items and shipping totals, then sends a gRPC call to Payment Service (Node.js) to execute billing. Note: Raw credit card attributes are logged in trace spans here!",
+                highlightNodes: ["node-checkout", "node-payment"],
+                highlightConns: ["conn-check-pay"]
+            },
+            {
+                title: "Step 8: Cart Clearance & Order Fulfillment Dispatch",
+                desc: "Checkout Service requests Shipping Service to finalize dispatch, and tells Cart Service to empty the user's active shopping cart in Valkey.",
+                highlightNodes: ["node-checkout", "node-shipping", "node-cart"],
+                highlightConns: ["conn-check-ship", "conn-check-cart"]
+            },
+            {
+                title: "Step 9: Direct Notifications & Broker Publishing",
+                desc: "Checkout Service triggers Email Service (Ruby) to send a confirmation code. Simultaneously, Checkout publishes the order summary payload to the Kafka Event Queue.",
+                highlightNodes: ["node-checkout", "node-email", "node-kafka"],
+                highlightConns: ["conn-check-email", "conn-check-kafka"]
+            },
+            {
+                title: "Step 10: Asynchronous Kafka consumers",
+                desc: "The transaction is complete. Post-checkout, the Accounting Service consumes the Kafka event to record invoices in Postgres. Simultaneously, Fraud Detection consumes the event to check flags asynchronously.",
+                highlightNodes: ["node-kafka", "node-accounting", "node-fraud", "node-postgres"],
+                highlightConns: ["conn-kafka-acct", "conn-kafka-fraud", "conn-acct-db"]
+            }
+        ];
+
+        function selectService(serviceId) {
+            if (isSimulating) return; // Disable selection during simulation
+            
+            // Remove previous selections
+            document.querySelectorAll('.node').forEach(node => {
+                node.classList.remove('selected');
+            });
+
+            const nodeElement = document.getElementById(`node-${serviceId}`);
+            if (nodeElement) {
+                nodeElement.classList.add('selected');
+            }
+
+            const data = servicesData[serviceId];
+            if (!data) return;
+
+            // Populate Sidebar
+            document.getElementById('sidebarTitle').innerText = data.title;
+            document.getElementById('sidebarTech').innerText = data.tech;
+            document.getElementById('sidebarTech').style.background = data.techColor + "22";
+            document.getElementById('sidebarTech').style.color = data.techColor;
+            document.getElementById('sidebarDesc').innerText = data.desc;
+            
+            document.getElementById('metaPath').innerText = data.path;
+            document.getElementById('metaPort').innerText = data.port;
+            document.getElementById('metaCrit').innerText = data.criticality;
+            document.getElementById('metaDb').innerText = data.db;
+            
+            // Risk Badge Styling
+            const riskBadge = document.getElementById('riskBadge');
+            riskBadge.innerText = `${data.risk.toUpperCase()} RISK`;
+            riskBadge.className = `risk-badge risk-${data.risk}`;
+            
+            // Populate Risk list
+            const riskListElement = document.getElementById('riskList');
+            riskListElement.innerHTML = '';
+            data.risks.forEach(r => {
+                const item = document.createElement('div');
+                item.className = 'risk-item';
+                item.innerHTML = `<strong>${r.title}</strong>${r.desc}`;
+                riskListElement.appendChild(item);
+            });
+
+            // Display sections
+            document.getElementById('metaSection').style.display = 'block';
+            document.getElementById('riskSection').style.display = 'block';
+        }
+
+        function resetView() {
+            if (isSimulating) stopCheckoutSimulation();
+            document.querySelectorAll('.node').forEach(node => {
+                node.classList.remove('selected');
+            });
+            document.getElementById('sidebarTitle').innerText = "Select a Microservice";
+            document.getElementById('sidebarTech').innerText = "Interactive Map";
+            document.getElementById('sidebarTech').style.background = "rgba(255,255,255,0.05)";
+            document.getElementById('sidebarTech').style.color = "var(--text-secondary)";
+            document.getElementById('sidebarDesc').innerText = "Click on any service card in the architecture map on the left to examine its parameters, technology stack, directory paths, communication links, and associated risk analysis.";
+            document.getElementById('metaSection').style.display = 'none';
+            document.getElementById('riskSection').style.display = 'none';
+        }
+
+        function toggleCheckoutSimulation() {
+            if (isSimulating) {
+                stopCheckoutSimulation();
+            } else {
+                startCheckoutSimulation();
+            }
+        }
+
+        function startCheckoutSimulation() {
+            isSimulating = true;
+            currentStep = 0;
+            document.getElementById('simulateBtn').innerText = "⏹ Stop Simulation";
+            document.getElementById('simulateBtn').style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
+            document.getElementById('simOverlay').style.display = 'block';
+            
+            // Clear current selection
+            document.querySelectorAll('.node').forEach(node => node.classList.remove('selected'));
+            
+            runSimulationStep(0);
+        }
+
+        function stopCheckoutSimulation() {
+            isSimulating = false;
+            document.getElementById('simulateBtn').innerText = "🚀 Simulate Checkout Flow";
+            document.getElementById('simulateBtn').style.background = "linear-gradient(135deg, #4f46e5, #7c3aed)";
+            document.getElementById('simOverlay').style.display = 'none';
+            
+            // Clear all active flows
+            document.querySelectorAll('.connection').forEach(c => {
+                c.classList.remove('active-flow');
+            });
+            document.querySelectorAll('.node').forEach(n => {
+                n.classList.remove('active-flow-node');
+            });
+        }
+
+        function runSimulationStep(stepIndex) {
+            // Reset previous highlights
+            document.querySelectorAll('.connection').forEach(c => c.classList.remove('active-flow'));
+            document.querySelectorAll('.node').forEach(n => n.classList.remove('active-flow-node'));
+
+            const step = simulationSteps[stepIndex];
+            
+            // Update Overlay Text
+            document.getElementById('simTitle').innerText = step.title;
+            document.getElementById('simDesc').innerText = step.desc;
+
+            // Highlight Nodes
+            step.highlightNodes.forEach(nodeId => {
+                document.getElementById(nodeId).classList.add('active-flow-node');
+            });
+
+            // Highlight Connections
+            step.highlightConns.forEach(connId => {
+                document.getElementById(connId).classList.add('active-flow');
+            });
+
+            // Handle button visibility
+            document.getElementById('simPrev').style.opacity = stepIndex === 0 ? '0.3' : '1';
+            document.getElementById('simPrev').disabled = stepIndex === 0;
+
+            const nextBtn = document.getElementById('simNext');
+            if (stepIndex === simulationSteps.length - 1) {
+                nextBtn.innerText = "Complete";
+            } else {
+                nextBtn.innerText = "Next Step";
+            }
+        }
+
+        function nextSimStep() {
+            if (currentStep < simulationSteps.length - 1) {
+                currentStep++;
+                runSimulationStep(currentStep);
+            } else {
+                stopCheckoutSimulation();
+            }
+        }
+
+        function prevSimStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                runSimulationStep(currentStep);
+            }
+        }
+    </script>
+</body>
+</html>
