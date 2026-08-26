@@ -820,3 +820,42 @@
 2026-08-26 21:45:05.021 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
 2026-08-26 21:45:05.031 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: 4c576954-a169-11f1-8417-f685423788b5
 2026-08-26 21:45:05.052 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-26 22:32:21.658 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-26 22:32:21.659 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-26 22:32:21.680 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-26 22:32:21.681 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-26 22:32:21.687 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-26 22:32:21.693 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-26 22:32:21.696 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-26 22:32:21.695 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-26 22:32:21.697 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-26 22:32:21.698 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-26 22:32:21.699 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-26 22:32:21.703 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-26 22:32:21.700 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-26 22:32:21.704 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-26 22:32:21.705 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-26 22:32:21.707 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-26 22:32:21.709 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-26 22:32:21.716 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-26 22:32:21.731 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-26 22:32:21.726 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-26 22:32:21.730 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-26 22:32:21.732 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-26 22:32:21.734 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-26 22:32:21.733 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-26 22:32:21.733 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-26 22:32:21.734 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-26 22:32:21.738 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-26 22:32:21.738 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-26 22:32:21.739 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-26 22:32:21.737 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-26 22:32:21.739 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-26 22:32:21.738 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-26 22:32:21.739 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-26 22:32:21.739 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-26 22:32:21.740 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-26 22:32:21.746 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-26 22:32:21.753 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-26 22:32:21.754 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-26 22:32:21.756 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully

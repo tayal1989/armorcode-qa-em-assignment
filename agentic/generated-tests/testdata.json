@@ -1,0 +1,22 @@
+{
+  "searchQuery": "solar",
+  "mockSearchResults": {
+    "results": [
+      {
+        "id": "0PUK6V6EV0",
+        "name": "Solar System Color Imager",
+        "description": "You have your new telescope and have observed Saturn and Jupiter. Now you're ready to take the next step and start imaging them. But where do you begin?",
+        "picture": "SolarSystemColorImager.jpg",
+        "priceUsd": {
+          "currencyCode": "USD",
+          "units": 175,
+          "nanos": 0
+        },
+        "categories": [
+          "accessories",
+          "telescopes"
+        ]
+      }
+    ]
+  }
+}

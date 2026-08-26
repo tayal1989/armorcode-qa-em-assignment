@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProductList",
+  "type": "array",
+  "items": {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Product",
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "picture": {
+        "type": "string"
+      },
+      "priceUsd": {
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "type": "string"
+          },
+          "units": {
+            "type": "integer"
+          },
+          "nanos": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "currencyCode",
+          "units",
+          "nanos"
+        ],
+        "additionalProperties": false
+      },
+      "categories": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": [
+      "id",
+      "name",
+      "description",
+      "picture",
+      "priceUsd"
+    ],
+    "additionalProperties": false
+  }
+}

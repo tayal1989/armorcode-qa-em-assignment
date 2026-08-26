@@ -1,0 +1,198 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Product Catalog Service",
+    "description": "API spec for the Product Catalog Service in OpenTelemetry Astronomy Shop",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Live Application Gateway"
+    }
+  ],
+  "paths": {
+    "/api/products": {
+      "get": {
+        "summary": "List all products in the catalog",
+        "operationId": "listProducts",
+        "parameters": [
+          {
+            "name": "currencyCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "USD"
+            },
+            "description": "3-letter currency code (ISO 4217)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "summary": "Get a product by its unique ID",
+        "operationId": "getProductById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The unique product identifier"
+          },
+          {
+            "name": "currencyCode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "USD"
+            },
+            "description": "3-letter currency code (ISO 4217)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/api/products/search": {
+      "post": {
+        "summary": "Search products in the catalog",
+        "operationId": "searchProducts",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Search query keyword"
+                  }
+                },
+                "required": [
+                  "query"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The search results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Product"
+                      }
+                    }
+                  },
+                  "required": [
+                    "results"
+                  ]
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed (intercepted and mocked in test harness if not supported natively)"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Product": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "priceUsd": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "picture",
+          "priceUsd"
+        ]
+      },
+      "Money": {
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "type": "string"
+          },
+          "units": {
+            "type": "integer"
+          },
+          "nanos": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "currencyCode",
+          "units",
+          "nanos"
+        ]
+      }
+    }
+  }
+}
