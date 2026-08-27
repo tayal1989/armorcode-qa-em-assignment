@@ -255,7 +255,7 @@
     <header>
       <div>
         <h1>Test Suite Analytics Dashboard</h1>
-        <div class="timestamp">Generated on: 8/26/2026, 10:41:59 PM</div>
+        <div class="timestamp">Generated on: 8/27/2026, 8:54:47 AM</div>
       </div>
       <a href="index.html" class="nav-btn">View Detailed Playwright HTML Report</a>
     </header>
@@ -264,11 +264,11 @@
     <div class="stats-grid">
       <div class="stat-card info">
         <div class="stat-label">Total Test Cases</div>
-        <div class="stat-value">9</div>
+        <div class="stat-value">24</div>
       </div>
       <div class="stat-card success">
         <div class="stat-label">Total Passed</div>
-        <div class="stat-value">9</div>
+        <div class="stat-value">24</div>
       </div>
       <div class="stat-card danger">
         <div class="stat-label">Total Failed</div>
@@ -276,7 +276,7 @@
       </div>
       <div class="stat-card warning">
         <div class="stat-label">Vulnerabilities Tracked</div>
-        <div class="stat-value">0</div>
+        <div class="stat-value">3</div>
       </div>
     </div>
 
@@ -313,11 +313,11 @@
         <tbody>
           <tr>
             <td><span class="badge api">API Scope</span></td>
-            <td>0</td>
-            <td class="text-success">0</td>
+            <td>15</td>
+            <td class="text-success">12</td>
             <td class="">0</td>
-            <td class="text-warning">0</td>
-            <td class="text-success">0%</td>
+            <td class="text-warning">3</td>
+            <td class="text-success">100.0%</td>
           </tr>
           <tr>
             <td><span class="badge ui">UI E2E Scope</span></td>
@@ -350,12 +350,13 @@
         </thead>
         <tbody>
           
-        <tr>
-          <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-            No known vulnerabilities or expected failures recorded in this execution run.
-          </td>
-        </tr>
-      
+          <tr>
+            <td><span class="badge warning">Security Tracking</span></td>
+            <td style="font-weight: 600;">api/cart_api.spec.ts › Cart Operations API › Validate invalid item quantity boundary rejection - Negative Quantity</td>
+            <td><span style="font-family: monospace; font-size: 0.85rem;">chromium, firefox, webkit</span></td>
+            <td class="text-warning" style="font-size: 0.9rem; line-height: 1.4;">Known security vulnerability: C# CartService accepts negative quantities and decrements cart balance.</td>
+          </tr>
+        
         </tbody>
       </table>
     </div>
@@ -383,7 +384,7 @@
       data: {
         labels: ['API Tests', 'UI Tests'],
         datasets: [{
-          data: [0, 9],
+          data: [15, 9],
           backgroundColor: ['#6366f1', '#06b6d4'],
           borderColor: '#1e293b',
           borderWidth: 2,
@@ -405,7 +406,7 @@
         datasets: [
           {
             label: 'Passed',
-            data: [0, 9],
+            data: [12, 9],
             backgroundColor: '#10b981',
             borderRadius: 6
           },
@@ -417,7 +418,7 @@
           },
           {
             label: 'Expected Failure',
-            data: [0, 0],
+            data: [3, 0],
             backgroundColor: '#f59e0b',
             borderRadius: 6
           }
