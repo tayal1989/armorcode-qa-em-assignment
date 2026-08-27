@@ -75,7 +75,7 @@ class CustomReporter implements Reporter {
     const totalSuccess = this.apiPassed + this.apiExpectedFailed + this.uiPassed + this.uiExpectedFailed;
     const totalFailed = this.apiFailed + this.uiFailed;
 
-    const reportsDir = path.resolve(process.cwd(), 'reports');
+    const reportsDir = path.resolve(__dirname, '..', 'reports');
     if (!fs.existsSync(reportsDir)) {
       fs.mkdirSync(reportsDir, { recursive: true });
     }

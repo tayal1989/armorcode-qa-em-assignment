@@ -16,7 +16,9 @@ test.describe('Cart UI Verification', () => {
     await expect(firstProductLink).toBeVisible();
     
     // Get product title on homepage to cross-reference later
-    const expectedTitle = await firstProductLink.locator('h3, p, div').first().textContent();
+    const expectedTitle = await firstProductLink.locator('p').first().textContent();
+    expect(expectedTitle).toBeTruthy();
+    expect(expectedTitle!.trim().length).toBeGreaterThan(0);
     logger.debug(`[PRODUCT] Selected: ${expectedTitle}`);
     await firstProductLink.click();
 
@@ -44,10 +46,13 @@ test.describe('Cart UI Verification', () => {
     // Click "Add To Cart"
     const addToCartBtn = page.locator('[data-cy="product-add-to-cart"]');
     await expect(addToCartBtn).toBeVisible();
-    await addToCartBtn.click();
-
+    
     // 3. Verify that the browser redirects to the cart page
-    await expect(page).toHaveURL(/\/cart/);
+    logger.info('[ACTION] Adding to cart and waiting for redirect');
+    await Promise.all([
+      page.waitForURL(/\/cart/),
+      addToCartBtn.click()
+    ]);
     logger.info('[REDIRECT] Switched to Cart page');
 
     // Verify that the cart badge updates to reflect the added unique item ('1')
@@ -77,11 +82,12 @@ test.describe('Cart UI Verification', () => {
     logger.info(`[ACTION] Selecting quantity: ${testData.ui.cartQuantity2}`);
     await quantitySelect.selectOption({ label: testData.ui.cartQuantity2.toString() });
 
-    // Click Add To Cart
-    await page.locator('[data-cy="product-add-to-cart"]').click();
-
-    // Verify we redirected to the Cart page
-    await expect(page).toHaveURL(/\/cart/);
+    // Click Add To Cart and wait for redirect
+    logger.info('[ACTION] Adding item to cart and waiting for redirect');
+    await Promise.all([
+      page.waitForURL(/\/cart/),
+      page.locator('[data-cy="product-add-to-cart"]').click()
+    ]);
     logger.info('[REDIRECT] Switched to Cart page for calculations check');
 
     // Verify subtotal matches unitPrice * cartQuantity2

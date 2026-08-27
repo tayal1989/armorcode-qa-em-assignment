@@ -18,11 +18,11 @@ test.describe('E2E Checkout Flow', () => {
     // 2. Add product to cart (which redirects to /cart)
     const addToCartBtn = page.locator('[data-cy="product-add-to-cart"]');
     await expect(addToCartBtn).toBeVisible();
-    logger.info('[ACTION] Adding item to cart');
-    await addToCartBtn.click();
-
-    // Verify redirect to /cart page
-    await expect(page).toHaveURL(/\/cart/);
+    logger.info('[ACTION] Adding item to cart and waiting for redirect');
+    await Promise.all([
+      page.waitForURL(/\/cart/),
+      addToCartBtn.click()
+    ]);
     logger.info('[REDIRECT] Switched to Cart page for checkout');
 
     const c = testData.ui.checkout;

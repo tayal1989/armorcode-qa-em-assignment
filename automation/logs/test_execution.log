@@ -1072,3 +1072,420 @@
 2026-08-27 08:54:46.854 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
 2026-08-27 08:54:46.867 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: da934abe-a1c6-11f1-8417-f685423788b5
 2026-08-27 08:54:46.893 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:09:25.574 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:09:25.576 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:09:25.571 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-hamfd70hts
+2026-08-27 09:09:25.577 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-27 09:09:25.575 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-27 09:09:25.582 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-6zvmw01x1a
+2026-08-27 09:09:25.583 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-hcdm41aqbh4
+2026-08-27 09:09:25.600 [INFO] TestSuite - [EXECUTE] Adding negative quantity (-5) for Product ID 0PUK6V6EV0
+2026-08-27 09:09:25.600 [INFO] TestSuite - [EXECUTE] Adding overflow quantity (2147483648) for Product ID 0PUK6V6EV0
+2026-08-27 09:09:25.600 [INFO] TestSuite - [EXECUTE] Step 1: Getting initial cart session status
+2026-08-27 09:09:25.602 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-27 09:09:25.602 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:09:25.604 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-27 09:09:25.605 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-27 09:09:25.606 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-27 09:09:25.608 [DEBUG] TestSuite - [RESPONSE] Rejection response status: 500
+2026-08-27 09:09:25.612 [DEBUG] TestSuite - [RESPONSE] Response status: 200
+2026-08-27 09:09:25.613 [INFO] TestSuite - [SCHEMA] Validating cart schema contract after negative addition vulnerability
+2026-08-27 09:09:25.614 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:09:25.614 [DEBUG] TestSuite - [STATUS] Initial cart contains: 0 items
+2026-08-27 09:09:25.615 [INFO] TestSuite - [SCHEMA] Validating initial empty cart schema contract
+2026-08-27 09:09:25.615 [INFO] TestSuite - [EXECUTE] Step 2: Adding Product ID 0PUK6V6EV0 with quantity 3
+2026-08-27 09:09:25.615 [WARN] TestSuite - [SECURITY RISK] Negative quantity accepted. Cart quantity is now: -5
+2026-08-27 09:09:25.617 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-hamfd70hts
+2026-08-27 09:09:25.616 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-27 09:09:25.617 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-27 09:09:25.618 [INFO] TestSuite - [ASSERT] Cart size after overflow attempt: 0 items
+2026-08-27 09:09:25.620 [INFO] TestSuite - [SUCCESS] Integer overflow quantity addition successfully rejected
+2026-08-27 09:09:25.620 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-6zvmw01x1a
+2026-08-27 09:09:25.618 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-27 09:09:25.623 [DEBUG] TestSuite - [STATUS] Cart size after addition: 1
+2026-08-27 09:09:25.624 [INFO] TestSuite - [SCHEMA] Validating populated cart schema contract
+2026-08-27 09:09:25.624 [INFO] TestSuite - [EXECUTE] Step 3: Getting cart again to verify persistence
+2026-08-27 09:09:25.637 [INFO] TestSuite - [EXECUTE] Step 4: Deleting cart session contents
+2026-08-27 09:09:25.643 [INFO] TestSuite - [EXECUTE] Step 5: Getting final cart to verify empty state
+2026-08-27 09:09:25.648 [DEBUG] TestSuite - [STATUS] Final cart contains: 0 items
+2026-08-27 09:09:25.649 [INFO] TestSuite - [SCHEMA] Validating final empty cart schema contract
+2026-08-27 09:09:25.649 [INFO] TestSuite - [SUCCESS] Cart lifecycle verification completed successfully
+2026-08-27 09:09:25.649 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-hcdm41aqbh4
+2026-08-27 09:09:25.967 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:25.967 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:25.968 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:26.094 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-86n29ba8f15
+2026-08-27 09:09:26.097 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-ooimaxjf72f
+2026-08-27 09:09:26.109 [INFO] TestSuite - [EXECUTE] Step 1: Getting initial cart session status
+2026-08-27 09:09:26.111 [INFO] TestSuite - [EXECUTE] Adding overflow quantity (2147483648) for Product ID 0PUK6V6EV0
+2026-08-27 09:09:26.115 [DEBUG] TestSuite - [STATUS] Initial cart contains: 0 items
+2026-08-27 09:09:26.116 [INFO] TestSuite - [SCHEMA] Validating initial empty cart schema contract
+2026-08-27 09:09:26.115 [DEBUG] TestSuite - [RESPONSE] Rejection response status: 500
+2026-08-27 09:09:26.116 [INFO] TestSuite - [EXECUTE] Step 2: Adding Product ID 0PUK6V6EV0 with quantity 3
+2026-08-27 09:09:26.118 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-ykmx6k74y5
+2026-08-27 09:09:26.121 [INFO] TestSuite - [ASSERT] Cart size after overflow attempt: 0 items
+2026-08-27 09:09:26.122 [INFO] TestSuite - [SUCCESS] Integer overflow quantity addition successfully rejected
+2026-08-27 09:09:26.122 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-ooimaxjf72f
+2026-08-27 09:09:26.122 [DEBUG] TestSuite - [STATUS] Cart size after addition: 1
+2026-08-27 09:09:26.123 [INFO] TestSuite - [SCHEMA] Validating populated cart schema contract
+2026-08-27 09:09:26.123 [INFO] TestSuite - [EXECUTE] Step 3: Getting cart again to verify persistence
+2026-08-27 09:09:26.130 [INFO] TestSuite - [EXECUTE] Step 4: Deleting cart session contents
+2026-08-27 09:09:26.133 [INFO] TestSuite - [EXECUTE] Adding negative quantity (-5) for Product ID 0PUK6V6EV0
+2026-08-27 09:09:26.137 [INFO] TestSuite - [EXECUTE] Step 5: Getting final cart to verify empty state
+2026-08-27 09:09:26.138 [DEBUG] TestSuite - [RESPONSE] Response status: 200
+2026-08-27 09:09:26.139 [INFO] TestSuite - [SCHEMA] Validating cart schema contract after negative addition vulnerability
+2026-08-27 09:09:26.141 [DEBUG] TestSuite - [STATUS] Final cart contains: 0 items
+2026-08-27 09:09:26.141 [INFO] TestSuite - [SCHEMA] Validating final empty cart schema contract
+2026-08-27 09:09:26.140 [WARN] TestSuite - [SECURITY RISK] Negative quantity accepted. Cart quantity is now: -5
+2026-08-27 09:09:26.141 [INFO] TestSuite - [SUCCESS] Cart lifecycle verification completed successfully
+2026-08-27 09:09:26.142 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-86n29ba8f15
+2026-08-27 09:09:26.142 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-ykmx6k74y5
+2026-08-27 09:09:26.144 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:09:26.145 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-27 09:09:26.151 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:09:26.153 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-27 09:09:26.153 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-27 09:09:26.154 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-27 09:09:26.165 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:09:26.165 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-27 09:09:26.172 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-27 09:09:26.178 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:09:26.179 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-27 09:09:26.179 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-27 09:09:26.180 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-27 09:09:26.441 [INFO] TestSuite - [EXECUTE] Click target product from catalog list
+2026-08-27 09:09:26.461 [INFO] TestSuite - [EXECUTE] Selecting first product from catalog list
+2026-08-27 09:09:26.469 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:09:26.504 [DEBUG] TestSuite - [PDP] Product unit price: $0
+2026-08-27 09:09:26.505 [INFO] TestSuite - [ACTION] Selecting quantity: 2
+2026-08-27 09:09:26.547 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:09:26.559 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:09:26.634 [INFO] TestSuite - [REDIRECT] Switched to Cart page for calculations check
+2026-08-27 09:09:26.638 [INFO] TestSuite - [ASSERT] Expected subtotal calculation: $0
+2026-08-27 09:09:26.663 [INFO] TestSuite - [REDIRECT] Switched to Cart page for checkout
+2026-08-27 09:09:26.664 [INFO] TestSuite - [FORM] Typing shipping details (Email: engineering.manager@armorcode.com, Zip: 95113)
+2026-08-27 09:09:26.702 [DEBUG] TestSuite - [SCREENSHOT] Attached calculations screenshot
+2026-08-27 09:09:26.708 [INFO] TestSuite - [ACTION] Clicking Empty Cart button
+2026-08-27 09:09:26.739 [INFO] TestSuite - [FORM] Typing billing details (Card: 4432... CVV: 672)
+2026-08-27 09:09:26.763 [INFO] TestSuite - [ASSERT] Verified empty cart container message
+2026-08-27 09:09:26.769 [DEBUG] TestSuite - [ASSERT] Verified cart badge count node is not attached
+2026-08-27 09:09:26.791 [INFO] TestSuite - [SUCCESS] Cart UI calculations and clear features verified successfully
+2026-08-27 09:09:26.791 [DEBUG] TestSuite - [SCREENSHOT] Attached filled checkout form
+2026-08-27 09:09:26.795 [INFO] TestSuite - [ACTION] Clicking Place Order button
+2026-08-27 09:09:26.906 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
+2026-08-27 09:09:26.911 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: e71e81ef-a1c8-11f1-8417-f685423788b5
+2026-08-27 09:09:26.931 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:09:27.194 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-vqs5tjdo6jf
+2026-08-27 09:09:27.215 [INFO] TestSuite - [EXECUTE] Step 1: Getting initial cart session status
+2026-08-27 09:09:27.228 [DEBUG] TestSuite - [STATUS] Initial cart contains: 0 items
+2026-08-27 09:09:27.229 [INFO] TestSuite - [SCHEMA] Validating initial empty cart schema contract
+2026-08-27 09:09:27.230 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:27.231 [INFO] TestSuite - [EXECUTE] Step 2: Adding Product ID 0PUK6V6EV0 with quantity 3
+2026-08-27 09:09:27.252 [DEBUG] TestSuite - [STATUS] Cart size after addition: 1
+2026-08-27 09:09:27.255 [INFO] TestSuite - [SCHEMA] Validating populated cart schema contract
+2026-08-27 09:09:27.256 [INFO] TestSuite - [EXECUTE] Step 3: Getting cart again to verify persistence
+2026-08-27 09:09:27.296 [INFO] TestSuite - [EXECUTE] Step 4: Deleting cart session contents
+2026-08-27 09:09:27.309 [INFO] TestSuite - [EXECUTE] Step 5: Getting final cart to verify empty state
+2026-08-27 09:09:27.323 [DEBUG] TestSuite - [STATUS] Final cart contains: 0 items
+2026-08-27 09:09:27.323 [INFO] TestSuite - [SCHEMA] Validating final empty cart schema contract
+2026-08-27 09:09:27.324 [INFO] TestSuite - [SUCCESS] Cart lifecycle verification completed successfully
+2026-08-27 09:09:27.324 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-vqs5tjdo6jf
+2026-08-27 09:09:27.383 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-u91xppoleq
+2026-08-27 09:09:27.399 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-dmqtdfeaxyq
+2026-08-27 09:09:27.413 [INFO] TestSuite - [EXECUTE] Adding negative quantity (-5) for Product ID 0PUK6V6EV0
+2026-08-27 09:09:27.420 [INFO] TestSuite - [EXECUTE] Adding overflow quantity (2147483648) for Product ID 0PUK6V6EV0
+2026-08-27 09:09:27.425 [DEBUG] TestSuite - [RESPONSE] Response status: 200
+2026-08-27 09:09:27.427 [INFO] TestSuite - [SCHEMA] Validating cart schema contract after negative addition vulnerability
+2026-08-27 09:09:27.427 [WARN] TestSuite - [SECURITY RISK] Negative quantity accepted. Cart quantity is now: -5
+2026-08-27 09:09:27.427 [DEBUG] TestSuite - [RESPONSE] Rejection response status: 500
+2026-08-27 09:09:27.429 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-dmqtdfeaxyq
+2026-08-27 09:09:27.438 [INFO] TestSuite - [ASSERT] Cart size after overflow attempt: 0 items
+2026-08-27 09:09:27.440 [INFO] TestSuite - [SUCCESS] Integer overflow quantity addition successfully rejected
+2026-08-27 09:09:27.440 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-u91xppoleq
+2026-08-27 09:09:27.469 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:09:27.470 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:09:27.470 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-27 09:09:27.470 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-27 09:09:27.481 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:09:27.481 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-27 09:09:27.482 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-27 09:09:27.482 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-27 09:09:27.483 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-27 09:09:27.494 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:09:27.495 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-27 09:09:27.495 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-27 09:09:27.496 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-27 09:09:27.659 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:27.680 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:09:28.264 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:28.387 [INFO] TestSuite - [EXECUTE] Click target product from catalog list
+2026-08-27 09:09:28.467 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:28.483 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:28.575 [DEBUG] TestSuite - [PDP] Product unit price: $0
+2026-08-27 09:09:28.575 [INFO] TestSuite - [ACTION] Selecting quantity: 2
+2026-08-27 09:09:28.623 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:09:28.725 [INFO] TestSuite - [REDIRECT] Switched to Cart page for calculations check
+2026-08-27 09:09:28.725 [INFO] TestSuite - [ASSERT] Expected subtotal calculation: $0
+2026-08-27 09:09:28.868 [INFO] TestSuite - [EXECUTE] Click target product from catalog list
+2026-08-27 09:09:28.901 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:09:28.924 [INFO] TestSuite - [EXECUTE] Selecting first product from catalog list
+2026-08-27 09:09:28.973 [DEBUG] TestSuite - [SCREENSHOT] Attached calculations screenshot
+2026-08-27 09:09:28.993 [INFO] TestSuite - [ACTION] Clicking Empty Cart button
+2026-08-27 09:09:29.046 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:29.056 [DEBUG] TestSuite - [PDP] Product unit price: $0
+2026-08-27 09:09:29.056 [INFO] TestSuite - [ACTION] Selecting quantity: 2
+2026-08-27 09:09:29.108 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:09:29.199 [INFO] TestSuite - [REDIRECT] Switched to Cart page for calculations check
+2026-08-27 09:09:29.199 [INFO] TestSuite - [ASSERT] Expected subtotal calculation: $0
+2026-08-27 09:09:29.233 [INFO] TestSuite - [ASSERT] Verified empty cart container message
+2026-08-27 09:09:29.239 [DEBUG] TestSuite - [ASSERT] Verified cart badge count node is not attached
+2026-08-27 09:09:29.295 [DEBUG] TestSuite - [SCREENSHOT] Attached calculations screenshot
+2026-08-27 09:09:29.305 [INFO] TestSuite - [ACTION] Clicking Empty Cart button
+2026-08-27 09:09:29.311 [INFO] TestSuite - [SUCCESS] Cart UI calculations and clear features verified successfully
+2026-08-27 09:09:29.380 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:09:29.450 [INFO] TestSuite - [ASSERT] Verified empty cart container message
+2026-08-27 09:09:29.464 [DEBUG] TestSuite - [ASSERT] Verified cart badge count node is not attached
+2026-08-27 09:09:29.500 [INFO] TestSuite - [SUCCESS] Cart UI calculations and clear features verified successfully
+2026-08-27 09:09:29.570 [INFO] TestSuite - [REDIRECT] Switched to Cart page for checkout
+2026-08-27 09:09:29.570 [INFO] TestSuite - [FORM] Typing shipping details (Email: engineering.manager@armorcode.com, Zip: 95113)
+2026-08-27 09:09:29.645 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:29.704 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:09:29.758 [INFO] TestSuite - [FORM] Typing billing details (Card: 4432... CVV: 672)
+2026-08-27 09:09:29.801 [DEBUG] TestSuite - [SCREENSHOT] Attached filled checkout form
+2026-08-27 09:09:29.806 [INFO] TestSuite - [ACTION] Clicking Place Order button
+2026-08-27 09:09:29.899 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
+2026-08-27 09:09:29.923 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: e8ea15f1-a1c8-11f1-8417-f685423788b5
+2026-08-27 09:09:29.968 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:09:29.998 [INFO] TestSuite - [EXECUTE] Selecting first product from catalog list
+2026-08-27 09:09:30.086 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:09:30.165 [INFO] TestSuite - [REDIRECT] Switched to Cart page for checkout
+2026-08-27 09:09:30.165 [INFO] TestSuite - [FORM] Typing shipping details (Email: engineering.manager@armorcode.com, Zip: 95113)
+2026-08-27 09:09:30.222 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:30.322 [INFO] TestSuite - [FORM] Typing billing details (Card: 4432... CVV: 672)
+2026-08-27 09:09:30.396 [DEBUG] TestSuite - [SCREENSHOT] Attached filled checkout form
+2026-08-27 09:09:30.399 [INFO] TestSuite - [ACTION] Clicking Place Order button
+2026-08-27 09:09:30.484 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
+2026-08-27 09:09:30.492 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: e9451dae-a1c8-11f1-8417-f685423788b5
+2026-08-27 09:09:30.548 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:09:30.645 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:09:31.254 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:09:31.631 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:10:04.288 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-raizhxw7ur
+2026-08-27 09:10:04.291 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-3hwf0ouy46u
+2026-08-27 09:10:04.293 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:10:04.294 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-27 09:10:04.297 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-y4an0zimnh
+2026-08-27 09:10:04.305 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:10:04.306 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-27 09:10:04.313 [INFO] TestSuite - [EXECUTE] Step 1: Getting initial cart session status
+2026-08-27 09:10:04.315 [INFO] TestSuite - [EXECUTE] Adding negative quantity (-5) for Product ID 0PUK6V6EV0
+2026-08-27 09:10:04.315 [INFO] TestSuite - [EXECUTE] Adding overflow quantity (2147483648) for Product ID 0PUK6V6EV0
+2026-08-27 09:10:04.318 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-27 09:10:04.320 [DEBUG] TestSuite - [RESPONSE] Rejection response status: 500
+2026-08-27 09:10:04.328 [DEBUG] TestSuite - [RESPONSE] Response status: 200
+2026-08-27 09:10:04.327 [DEBUG] TestSuite - [STATUS] Initial cart contains: 0 items
+2026-08-27 09:10:04.328 [INFO] TestSuite - [SCHEMA] Validating initial empty cart schema contract
+2026-08-27 09:10:04.327 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:10:04.328 [INFO] TestSuite - [EXECUTE] Step 2: Adding Product ID 0PUK6V6EV0 with quantity 3
+2026-08-27 09:10:04.329 [INFO] TestSuite - [SCHEMA] Validating cart schema contract after negative addition vulnerability
+2026-08-27 09:10:04.330 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-27 09:10:04.330 [WARN] TestSuite - [SECURITY RISK] Negative quantity accepted. Cart quantity is now: -5
+2026-08-27 09:10:04.331 [INFO] TestSuite - [ASSERT] Cart size after overflow attempt: 0 items
+2026-08-27 09:10:04.330 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-27 09:10:04.332 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-3hwf0ouy46u
+2026-08-27 09:10:04.331 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-27 09:10:04.331 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:10:04.332 [INFO] TestSuite - [SUCCESS] Integer overflow quantity addition successfully rejected
+2026-08-27 09:10:04.333 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-y4an0zimnh
+2026-08-27 09:10:04.333 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-27 09:10:04.334 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-27 09:10:04.338 [DEBUG] TestSuite - [STATUS] Cart size after addition: 1
+2026-08-27 09:10:04.339 [INFO] TestSuite - [SCHEMA] Validating populated cart schema contract
+2026-08-27 09:10:04.339 [INFO] TestSuite - [EXECUTE] Step 3: Getting cart again to verify persistence
+2026-08-27 09:10:04.336 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-27 09:10:04.352 [INFO] TestSuite - [EXECUTE] Step 4: Deleting cart session contents
+2026-08-27 09:10:04.362 [INFO] TestSuite - [EXECUTE] Step 5: Getting final cart to verify empty state
+2026-08-27 09:10:04.370 [DEBUG] TestSuite - [STATUS] Final cart contains: 0 items
+2026-08-27 09:10:04.370 [INFO] TestSuite - [SCHEMA] Validating final empty cart schema contract
+2026-08-27 09:10:04.371 [INFO] TestSuite - [SUCCESS] Cart lifecycle verification completed successfully
+2026-08-27 09:10:04.371 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-raizhxw7ur
+2026-08-27 09:10:04.491 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:04.516 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:04.531 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:04.820 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-ro9qvtw4ptf
+2026-08-27 09:10:04.831 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-firt4qkvu1t
+2026-08-27 09:10:04.834 [INFO] TestSuite - [EXECUTE] Step 1: Getting initial cart session status
+2026-08-27 09:10:04.857 [DEBUG] TestSuite - [STATUS] Initial cart contains: 0 items
+2026-08-27 09:10:04.859 [INFO] TestSuite - [SCHEMA] Validating initial empty cart schema contract
+2026-08-27 09:10:04.860 [INFO] TestSuite - [EXECUTE] Step 2: Adding Product ID 0PUK6V6EV0 with quantity 3
+2026-08-27 09:10:04.882 [INFO] TestSuite - [EXECUTE] Adding overflow quantity (2147483648) for Product ID 0PUK6V6EV0
+2026-08-27 09:10:04.883 [DEBUG] TestSuite - [STATUS] Cart size after addition: 1
+2026-08-27 09:10:04.884 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-b8ewhax01f7
+2026-08-27 09:10:04.884 [INFO] TestSuite - [SCHEMA] Validating populated cart schema contract
+2026-08-27 09:10:04.884 [INFO] TestSuite - [EXECUTE] Step 3: Getting cart again to verify persistence
+2026-08-27 09:10:04.901 [DEBUG] TestSuite - [RESPONSE] Rejection response status: 500
+2026-08-27 09:10:04.921 [INFO] TestSuite - [EXECUTE] Step 4: Deleting cart session contents
+2026-08-27 09:10:04.922 [INFO] TestSuite - [ASSERT] Cart size after overflow attempt: 0 items
+2026-08-27 09:10:04.926 [INFO] TestSuite - [EXECUTE] Adding negative quantity (-5) for Product ID 0PUK6V6EV0
+2026-08-27 09:10:04.923 [INFO] TestSuite - [SUCCESS] Integer overflow quantity addition successfully rejected
+2026-08-27 09:10:04.927 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-firt4qkvu1t
+2026-08-27 09:10:04.931 [INFO] TestSuite - [EXECUTE] Click target product from catalog list
+2026-08-27 09:10:04.958 [INFO] TestSuite - [EXECUTE] Step 5: Getting final cart to verify empty state
+2026-08-27 09:10:04.969 [DEBUG] TestSuite - [RESPONSE] Response status: 200
+2026-08-27 09:10:04.971 [INFO] TestSuite - [SCHEMA] Validating cart schema contract after negative addition vulnerability
+2026-08-27 09:10:04.974 [WARN] TestSuite - [SECURITY RISK] Negative quantity accepted. Cart quantity is now: -5
+2026-08-27 09:10:04.976 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-b8ewhax01f7
+2026-08-27 09:10:04.978 [DEBUG] TestSuite - [STATUS] Final cart contains: 0 items
+2026-08-27 09:10:04.979 [INFO] TestSuite - [SCHEMA] Validating final empty cart schema contract
+2026-08-27 09:10:04.979 [INFO] TestSuite - [SUCCESS] Cart lifecycle verification completed successfully
+2026-08-27 09:10:04.979 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-ro9qvtw4ptf
+2026-08-27 09:10:04.988 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:10:04.999 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:10:04.999 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-27 09:10:05.004 [INFO] TestSuite - [EXECUTE] Selecting first product from catalog list
+2026-08-27 09:10:05.013 [DEBUG] TestSuite - [PRODUCT] Selected: Solar System Color Imager
+2026-08-27 09:10:05.014 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:10:05.015 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:10:05.015 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-27 09:10:05.015 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-27 09:10:05.016 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-27 09:10:05.018 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-27 09:10:05.026 [DEBUG] TestSuite - [PDP] Product unit price: $175
+2026-08-27 09:10:05.026 [INFO] TestSuite - [ACTION] Selecting quantity: 2
+2026-08-27 09:10:05.038 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-27 09:10:05.079 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:10:05.106 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:10:05.118 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-27 09:10:05.120 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-27 09:10:05.128 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-27 09:10:05.141 [INFO] TestSuite - [PDP] Navigated successfully. Current URL: http://localhost:8080/product/0PUK6V6EV0
+2026-08-27 09:10:05.156 [DEBUG] TestSuite - [PDP] Product Name: 
+2026-08-27 09:10:05.157 [INFO] TestSuite - [ACTION] Selecting quantity: 3
+2026-08-27 09:10:05.186 [DEBUG] TestSuite - [SCREENSHOT] Attached PDP selection
+2026-08-27 09:10:05.189 [INFO] TestSuite - [ACTION] Adding to cart and waiting for redirect
+2026-08-27 09:10:05.199 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:10:05.278 [INFO] TestSuite - [REDIRECT] Switched to Cart page for calculations check
+2026-08-27 09:10:05.278 [INFO] TestSuite - [ASSERT] Expected subtotal calculation: $350
+2026-08-27 09:10:05.299 [INFO] TestSuite - [REDIRECT] Switched to Cart page
+2026-08-27 09:10:05.300 [INFO] TestSuite - [ASSERT] Verifying cart badge is 1
+2026-08-27 09:10:05.328 [DEBUG] TestSuite - [SCREENSHOT] Attached calculations screenshot
+2026-08-27 09:10:05.336 [INFO] TestSuite - [ACTION] Clicking Empty Cart button
+2026-08-27 09:10:05.337 [INFO] TestSuite - [REDIRECT] Switched to Cart page for checkout
+2026-08-27 09:10:05.337 [INFO] TestSuite - [FORM] Typing shipping details (Email: engineering.manager@armorcode.com, Zip: 95113)
+2026-08-27 09:10:05.340 [INFO] TestSuite - [SUCCESS] Cart UI badge check completed successfully
+2026-08-27 09:10:05.406 [INFO] TestSuite - [FORM] Typing billing details (Card: 4432... CVV: 672)
+2026-08-27 09:10:05.461 [DEBUG] TestSuite - [SCREENSHOT] Attached filled checkout form
+2026-08-27 09:10:05.463 [INFO] TestSuite - [ASSERT] Verified empty cart container message
+2026-08-27 09:10:05.467 [INFO] TestSuite - [ACTION] Clicking Place Order button
+2026-08-27 09:10:05.470 [DEBUG] TestSuite - [ASSERT] Verified cart badge count node is not attached
+2026-08-27 09:10:05.495 [INFO] TestSuite - [SUCCESS] Cart UI calculations and clear features verified successfully
+2026-08-27 09:10:05.575 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
+2026-08-27 09:10:05.580 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: fe2ade47-a1c8-11f1-8417-f685423788b5
+2026-08-27 09:10:05.601 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:10:05.802 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-uutqgxdtyt
+2026-08-27 09:10:05.818 [INFO] TestSuite - [EXECUTE] Step 1: Getting initial cart session status
+2026-08-27 09:10:05.824 [DEBUG] TestSuite - [STATUS] Initial cart contains: 0 items
+2026-08-27 09:10:05.825 [INFO] TestSuite - [SCHEMA] Validating initial empty cart schema contract
+2026-08-27 09:10:05.825 [INFO] TestSuite - [EXECUTE] Step 2: Adding Product ID 0PUK6V6EV0 with quantity 3
+2026-08-27 09:10:05.833 [DEBUG] TestSuite - [STATUS] Cart size after addition: 1
+2026-08-27 09:10:05.834 [INFO] TestSuite - [SCHEMA] Validating populated cart schema contract
+2026-08-27 09:10:05.834 [INFO] TestSuite - [EXECUTE] Step 3: Getting cart again to verify persistence
+2026-08-27 09:10:05.845 [INFO] TestSuite - [EXECUTE] Step 4: Deleting cart session contents
+2026-08-27 09:10:05.854 [INFO] TestSuite - [EXECUTE] Step 5: Getting final cart to verify empty state
+2026-08-27 09:10:05.862 [DEBUG] TestSuite - [STATUS] Final cart contains: 0 items
+2026-08-27 09:10:05.863 [INFO] TestSuite - [SCHEMA] Validating final empty cart schema contract
+2026-08-27 09:10:05.864 [INFO] TestSuite - [SUCCESS] Cart lifecycle verification completed successfully
+2026-08-27 09:10:05.865 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-uutqgxdtyt
+2026-08-27 09:10:05.894 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:10:05.895 [INFO] TestSuite - [EXECUTE] GET /api/products request initiated
+2026-08-27 09:10:05.895 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-xnoldt16lko
+2026-08-27 09:10:05.902 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:10:05.903 [INFO] TestSuite - [ASSERT] Product catalog size: 10 items
+2026-08-27 09:10:05.903 [INFO] TestSuite - [SCHEMA] Validating product catalog list JSON Schema contract
+2026-08-27 09:10:05.904 [INFO] TestSuite - [SUCCESS] Product list JSON Schema checks completed successfully
+2026-08-27 09:10:05.910 [INFO] TestSuite - [START] Setting up Product Catalog API test client
+2026-08-27 09:10:05.911 [INFO] TestSuite - [EXECUTE] Fetching products list to select a target product ID
+2026-08-27 09:10:05.912 [INFO] TestSuite - [EXECUTE] Adding overflow quantity (2147483648) for Product ID 0PUK6V6EV0
+2026-08-27 09:10:05.919 [DEBUG] TestSuite - [RESPONSE] Rejection response status: 500
+2026-08-27 09:10:05.921 [INFO] TestSuite - [EXECUTE] GET /api/products/0PUK6V6EV0 request initiated
+2026-08-27 09:10:05.928 [INFO] TestSuite - [ASSERT] Cart size after overflow attempt: 0 items
+2026-08-27 09:10:05.928 [DEBUG] TestSuite - [RESPONSE] Status received: 200
+2026-08-27 09:10:05.928 [INFO] TestSuite - [SUCCESS] Integer overflow quantity addition successfully rejected
+2026-08-27 09:10:05.929 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-xnoldt16lko
+2026-08-27 09:10:05.929 [INFO] TestSuite - [SCHEMA] Validating product detail JSON Schema contract for target ID: 0PUK6V6EV0
+2026-08-27 09:10:05.929 [INFO] TestSuite - [ASSERT] Checking retrieved product fields for target ID: 0PUK6V6EV0
+2026-08-27 09:10:05.930 [INFO] TestSuite - [SUCCESS] Single product detail extraction verified successfully
+2026-08-27 09:10:05.981 [INFO] TestSuite - [START] Initializing Cart Operations API test with Session ID: session-x7006y4bzda
+2026-08-27 09:10:05.997 [INFO] TestSuite - [EXECUTE] Adding negative quantity (-5) for Product ID 0PUK6V6EV0
+2026-08-27 09:10:06.005 [DEBUG] TestSuite - [RESPONSE] Response status: 200
+2026-08-27 09:10:06.006 [INFO] TestSuite - [SCHEMA] Validating cart schema contract after negative addition vulnerability
+2026-08-27 09:10:06.008 [WARN] TestSuite - [SECURITY RISK] Negative quantity accepted. Cart quantity is now: -5
+2026-08-27 09:10:06.009 [INFO] TestSuite - [CLEANUP] Clearing session cart for Session ID: session-x7006y4bzda
+2026-08-27 09:10:06.438 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:06.781 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:06.783 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:06.795 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:06.951 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:06.993 [INFO] TestSuite - [EXECUTE] Click target product from catalog list
+2026-08-27 09:10:07.206 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:10:07.220 [INFO] TestSuite - [EXECUTE] Selecting first product from catalog list
+2026-08-27 09:10:07.208 [INFO] TestSuite - [EXECUTE] Click target product from catalog list
+2026-08-27 09:10:07.351 [DEBUG] TestSuite - [PRODUCT] Selected: Solar System Color Imager
+2026-08-27 09:10:07.468 [DEBUG] TestSuite - [PDP] Product unit price: $175
+2026-08-27 09:10:07.468 [INFO] TestSuite - [ACTION] Selecting quantity: 2
+2026-08-27 09:10:07.523 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:10:07.528 [INFO] TestSuite - [PDP] Navigated successfully. Current URL: http://localhost:8080/product/0PUK6V6EV0
+2026-08-27 09:10:07.531 [DEBUG] TestSuite - [PDP] Product Name: 
+2026-08-27 09:10:07.531 [INFO] TestSuite - [ACTION] Selecting quantity: 3
+2026-08-27 09:10:07.567 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:10:07.634 [DEBUG] TestSuite - [PDP] Product unit price: $0
+2026-08-27 09:10:07.634 [INFO] TestSuite - [ACTION] Selecting quantity: 2
+2026-08-27 09:10:07.668 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:10:07.710 [DEBUG] TestSuite - [SCREENSHOT] Attached PDP selection
+2026-08-27 09:10:07.727 [INFO] TestSuite - [ACTION] Adding to cart and waiting for redirect
+2026-08-27 09:10:07.822 [INFO] TestSuite - [REDIRECT] Switched to Cart page for checkout
+2026-08-27 09:10:07.823 [INFO] TestSuite - [FORM] Typing shipping details (Email: engineering.manager@armorcode.com, Zip: 95113)
+2026-08-27 09:10:07.847 [INFO] TestSuite - [REDIRECT] Switched to Cart page for calculations check
+2026-08-27 09:10:07.847 [INFO] TestSuite - [ASSERT] Expected subtotal calculation: $350
+2026-08-27 09:10:07.922 [DEBUG] TestSuite - [SCREENSHOT] Attached calculations screenshot
+2026-08-27 09:10:07.934 [INFO] TestSuite - [ACTION] Clicking Empty Cart button
+2026-08-27 09:10:07.975 [INFO] TestSuite - [REDIRECT] Switched to Cart page
+2026-08-27 09:10:07.975 [INFO] TestSuite - [ASSERT] Verifying cart badge is 1
+2026-08-27 09:10:08.017 [INFO] TestSuite - [FORM] Typing billing details (Card: 4432... CVV: 672)
+2026-08-27 09:10:08.069 [INFO] TestSuite - [SUCCESS] Cart UI badge check completed successfully
+2026-08-27 09:10:08.063 [INFO] TestSuite - [ASSERT] Verified empty cart container message
+2026-08-27 09:10:08.074 [DEBUG] TestSuite - [ASSERT] Verified cart badge count node is not attached
+2026-08-27 09:10:08.104 [INFO] TestSuite - [EXECUTE] Selecting first product from catalog list
+2026-08-27 09:10:08.114 [INFO] TestSuite - [REDIRECT] Switched to Cart page for calculations check
+2026-08-27 09:10:08.114 [INFO] TestSuite - [ASSERT] Expected subtotal calculation: $0
+2026-08-27 09:10:08.134 [INFO] TestSuite - [SUCCESS] Cart UI calculations and clear features verified successfully
+2026-08-27 09:10:08.195 [DEBUG] TestSuite - [SCREENSHOT] Attached filled checkout form
+2026-08-27 09:10:08.209 [INFO] TestSuite - [ACTION] Clicking Place Order button
+2026-08-27 09:10:08.332 [INFO] TestSuite - [START] Navigating to storefront homepage
+2026-08-27 09:10:08.353 [DEBUG] TestSuite - [SCREENSHOT] Attached calculations screenshot
+2026-08-27 09:10:08.357 [INFO] TestSuite - [ACTION] Clicking Empty Cart button
+2026-08-27 09:10:08.469 [INFO] TestSuite - [ASSERT] Verified empty cart container message
+2026-08-27 09:10:08.470 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
+2026-08-27 09:10:08.477 [DEBUG] TestSuite - [ASSERT] Verified cart badge count node is not attached
+2026-08-27 09:10:08.478 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: ffcc95bf-a1c8-11f1-8417-f685423788b5
+2026-08-27 09:10:08.501 [INFO] TestSuite - [SUCCESS] Cart UI calculations and clear features verified successfully
+2026-08-27 09:10:08.515 [INFO] TestSuite - [ACTION] Adding item to cart and waiting for redirect
+2026-08-27 09:10:08.522 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:10:08.590 [INFO] TestSuite - [REDIRECT] Switched to Cart page for checkout
+2026-08-27 09:10:08.590 [INFO] TestSuite - [FORM] Typing shipping details (Email: engineering.manager@armorcode.com, Zip: 95113)
+2026-08-27 09:10:08.692 [INFO] TestSuite - [FORM] Typing billing details (Card: 4432... CVV: 672)
+2026-08-27 09:10:08.729 [DEBUG] TestSuite - [SCREENSHOT] Attached filled checkout form
+2026-08-27 09:10:08.733 [INFO] TestSuite - [ACTION] Clicking Place Order button
+2026-08-27 09:10:08.771 [INFO] TestSuite - [EXECUTE] Finding first product card on catalog
+2026-08-27 09:10:08.798 [DEBUG] TestSuite - [PRODUCT] Selected: Solar System Color Imager
+2026-08-27 09:10:08.840 [INFO] TestSuite - [ASSERT] Verified checkout confirmation message
+2026-08-27 09:10:08.849 [INFO] TestSuite - [CHECKOUT SUCCESS] Generated Order ID: 001eba05-a1c9-11f1-8417-f685423788b5
+2026-08-27 09:10:08.870 [INFO] TestSuite - [SUCCESS] End-to-end checkout UI flow completed successfully
+2026-08-27 09:10:08.888 [INFO] TestSuite - [PDP] Navigated successfully. Current URL: http://localhost:8080/product/0PUK6V6EV0
+2026-08-27 09:10:08.891 [DEBUG] TestSuite - [PDP] Product Name: Solar System Color Imager
+2026-08-27 09:10:08.892 [INFO] TestSuite - [ACTION] Selecting quantity: 3
+2026-08-27 09:10:08.940 [DEBUG] TestSuite - [SCREENSHOT] Attached PDP selection
+2026-08-27 09:10:08.942 [INFO] TestSuite - [ACTION] Adding to cart and waiting for redirect
+2026-08-27 09:10:08.981 [INFO] TestSuite - [REDIRECT] Switched to Cart page
+2026-08-27 09:10:08.981 [INFO] TestSuite - [ASSERT] Verifying cart badge is 1
+2026-08-27 09:10:09.030 [INFO] TestSuite - [SUCCESS] Cart UI badge check completed successfully
