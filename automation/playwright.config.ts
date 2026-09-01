@@ -19,10 +19,19 @@ export default defineConfig({
     ['html', { outputFolder: 'reports', open: 'never' }],
     ['./helpers/custom_reporter.ts']
   ],
+  /* Global test and expect timeouts for microservice execution */
+  timeout: 30000,
+  expect: {
+    timeout: 10000,
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     baseURL: 'http://localhost:8080',
+
+    /* Action & navigation timeouts */
+    actionTimeout: 10000,
+    navigationTimeout: 15000,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

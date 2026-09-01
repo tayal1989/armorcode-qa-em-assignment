@@ -52,11 +52,14 @@ test.describe('E2E Checkout Flow', () => {
     // 4. Submit Order
     const placeOrderBtn = page.locator('[data-cy="checkout-place-order"], button[type="submit"]:has-text("Place Order")');
     await expect(placeOrderBtn).toBeEnabled();
-    logger.info('[ACTION] Clicking Place Order button');
-    await placeOrderBtn.click();
+    logger.info('[ACTION] Clicking Place Order button and waiting for checkout redirect');
+    await Promise.all([
+      page.waitForURL(/\/cart\/checkout\/.+/, { timeout: 15000 }),
+      placeOrderBtn.click()
+    ]);
 
     // 5. Verify Checkout Confirmation screen is displayed
-    await expect(page.locator('text=Your order is complete!')).toBeVisible();
+    await expect(page.locator('text=Your order is complete!')).toBeVisible({ timeout: 10000 });
     logger.info('[ASSERT] Verified checkout confirmation message');
     
     // Verify that the Order ID is present on the confirmation screen
